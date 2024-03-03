@@ -1,0 +1,96 @@
+@import url('./variables.css');
+footer {
+    height: 100%;
+    background: var(--ser-color);
+    justify-items: end;
+    grid-row: 2;
+}
+
+footer .container {
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    padding: 30px 50px;
+}
+
+footer p,
+footer a {
+    color: #9B9A9A;
+}
+
+.social svg {
+    fill: #9B9A9A;
+    transition: all .3s ease;
+}
+
+footer .logo svg {
+    fill: #fff;
+}
+
+.arrow-start {
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-items: end;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+
+.arrow-start svg {
+    fill: var(--line-color);
+    transition: all .3s ease;
+}
+
+footer .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.social {
+    display: flex;
+    gap: 30px;
+}
+
+@media only screen and (max-width: 700px) {
+    footer .container {
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        padding: 30px 20px;
+    }
+    footer .social {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .arrow-start {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        cursor: pointer;
+    }
+    footer .logo {
+        align-self: center;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+    }
+}

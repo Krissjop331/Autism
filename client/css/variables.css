@@ -1,0 +1,67 @@
+/* SF PRO TEXT */
+
+@font-face {
+    font-family: 'SFProText-Bold';
+    src: url('/fonts/SF_PRO/SFProText-Bold.ttf');
+    font-weight: bold !important;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SFProText-Medium';
+    src: url('/fonts/SF_PRO/SFProText-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'SFProText-Semibold';
+    src: url('/fonts/SF_PRO/SFProText-Semibold.ttf');
+}
+
+@font-face {
+    font-family: 'SFProText-Regular';
+    src: url('/fonts/SF_PRO/SFProText-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'SFProText-Light';
+    src: url('/fonts/SF_PRO/SFProText-Light.ttf');
+}
+
+
+/* GILROY TEXT*/
+
+@font-face {
+    font-family: 'Gilroy-Medium';
+    src: url('/fonts/Gilroy/Gilroy-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Gilroy-Bold';
+    src: url('/fonts/Gilroy/Gilroy-Bold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Gilroy-Regular';
+    src: url('/fonts/Gilroy/Gilroy-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Gilroy-Semibold';
+    src: url('/fonts/Gilroy/Gilroy-Semibold.ttf');
+}
+
+@font-face {
+    font-family: 'Gilroy-Thin';
+    src: url('/fonts/Gilroy/Gilroy-Thin.ttf');
+}
+
+:root {
+    --size: calc(1vw + 1vh);
+    --line-color: #1A2E47;
+    --ser-color: #1E1E1E;
+    --black: #1E1E1E;
+    --blue-admin-color: #192E47;
+    --white: #fff;
+}

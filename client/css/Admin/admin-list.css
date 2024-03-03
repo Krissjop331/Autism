@@ -1,0 +1,69 @@
+.container_menu-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.container_menu-info-wrap-admin {
+    border: 3px solid #333;
+    /* Замените var(--line-color) на цвет вашей линии */
+    box-shadow: 0px 0px 5px #333;
+    /* Замените var(--line-color) на цвет вашей линии */
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid_title {
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.grid_title,
+.grid_users {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+}
+
+.grid_users {
+    margin-top: 10px;
+}
+
+.grid_title p,
+.grid_users p {
+    border-right: 1px solid #333;
+    /* Замените var(--line-color) на цвет вашей линии */
+    padding: 10px;
+}
+
+.grid_users-button {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid_users button {
+    width: 35px;
+    height: 35px;
+    padding: 20px;
+    border-radius: 50%;
+    padding: 0;
+    & svg {
+        fill: #fff;
+        transition: all .3s ease;
+    }
+}
+
+button:hover svg {
+    fill: var(--line-color);
+}
+
+button:active svg {
+    fill: var(--line-color);
+    transform: scale(.8);
+}

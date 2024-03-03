@@ -1,0 +1,26 @@
+@import url('/css/variables.css');
+
+/* !  */
+
+.container {
+    align-self: center;
+}
+
+.wrapper-learn {
+    display: flex !important;
+    flex-direction: column;
+}
+
+
+/* header {
+    max-width: 1500px;
+    width: 90vw !important;
+} */
+
+#burger .span {
+    background: var(--line-color);
+}
+
+.active #burger .span {
+    background: var(--white);
+}

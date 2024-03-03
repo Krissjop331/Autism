@@ -1,0 +1,110 @@
+@import url('reset.css');
+@import url('./HomePage/filter.css');
+@import url('variables.css');
+@import url('header.css');
+@import url('hover.css');
+@import url('HomePage/home.css');
+@import url('./HomePage/featured.css');
+@import url('./HomePage/forum.css');
+@import url('./footer.css');
+
+/* ? REGISTRATION */
+
+@import url('./Registration/reg.css');
+
+/* ? Authorization */
+
+@import url('./Auth/auth.css');
+
+/* ? Learn */
+
+@import url('./Learn/main.css');
+@import url('./Learn/form.css');
+@import url('./Learn/learn.css');
+
+/*  ------------------------------------------------------------------------------------------------------ */
+
+
+/*  ------------------------------------------------------------------------------------------------------ */
+
+
+/*  ------------------------------------------------------------------------------------------------------ */
+
+
+/*  ------------------------------------------------------------------------------------------------------ */
+
+.wrapper[data-profile] {
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 90% auto;
+}
+
+h2 {
+    color: var(--line-color);
+    font-family: 'Gilroy-Semibold';
+    font-size: 36px;
+    font-style: normal;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+h3 {
+    color: var(--line-color);
+    font-family: 'Gilroy-Semibold';
+    font-size: 24px;
+    font-style: normal;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+h4 {
+    color: var(--line-color);
+    font-family: 'Gilroy-Semibold';
+    font-size: 16px;
+    font-style: normal;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+main {
+    flex: 1 1 auto;
+    margin: 50px;
+    margin-top: 50px;
+}
+
+a,
+p {
+    font-family: 'Gilroy-Regular';
+}
+
+
+/* ! */
+
+.slider {
+    display: flex;
+    overflow-x: scroll;
+    overflow: hidden;
+    scroll-behavior: inherit;
+    user-select: none;
+}
+
+.slider img {
+    cursor: pointer;
+}
+
+.slider-container {
+    display: flex;
+    gap: 20px;
+}
+
+
+/* ! */
+
+.white-fill-logo {
+    fill: var(--white) !important;
+}
+
+.white-background-span {
+    background: var(--white) !important;
+}

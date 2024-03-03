@@ -1,0 +1,86 @@
+@import url('/css/variables.css');
+.learns {
+    width: 100%;
+    margin: 100px 0;
+}
+
+.learns h1 {
+    color: var(--Black, #1E1E1E);
+    font-family: 'Gilroy-Semibold';
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 30px;
+}
+
+.learns_content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    gap: 50px;
+    width: 100%;
+    height: 100%;
+    align-items: center !important;
+    justify-content: center;
+}
+
+.learn img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.learn {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.learn h3 {
+    margin: 0;
+    margin-bottom: 10px;
+    padding: 0;
+}
+
+.learn .date {
+    margin-top: 10px;
+}
+
+.learn .time-learn {
+    color: var(--Main, #1A2E47);
+    font-family: 'Gilroy-Regular';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.learn .border-button {
+    width: 100%;
+    height: 60px;
+    align-self: center;
+    margin-top: 10px;
+}
+
+@media only screen and (max-width: 700px) {
+    .learns {
+        margin: 50px 0;
+    }
+    .learns_content {
+        display: flex;
+        flex-direction: column;
+        align-items: first baseline !important;
+    }
+    .learn_wrap {
+        margin-left: 10%;
+    }
+    .learn img {
+        width: 80vw !important;
+    }
+    @media only screen and (max-width: 400px) {
+        .learn img {
+            width: 80vw !important;
+            align-items: auto !important;
+        }
+    }
+}

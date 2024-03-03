@@ -1,0 +1,127 @@
+@import url('/css/variables.css');
+@media only screen and (min-width: 700px) {
+    .menu-mobile {
+        visibility: hidden !important;
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+    header {
+        max-width: 1400px;
+        width: 100%;
+        height: 100px;
+        border-radius: 14px;
+        border: 1px solid #BFBFBF;
+        background: rgba(255, 255, 255, 0.90);
+        backdrop-filter: blur(2px);
+        border-radius: 10px;
+        margin-top: 40px;
+        display: flex;
+        align-items: center;
+    }
+    .header-learn {
+        max-width: 1500px;
+        width: 90vw;
+    }
+    .link-block {
+        display: flex;
+        gap: 20px;
+    }
+    header .menu-desk {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 5px 50px;
+    }
+    .menu-desk nav {
+        display: flex;
+        gap: 30px;
+    }
+    .active-link {
+        font-family: 'Gilroy-Bold';
+    }
+    .logo svg {
+        fill: var(--black);
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .menu-desk {
+        visibility: hidden !important;
+        width: 0;
+        height: 0;
+        opacity: 0;
+        display: none;
+    }
+    .menu-mobile {
+        opacity: 1;
+        width: auto;
+        height: auto;
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header-learn .menu-mobile {
+        width: 80vw;
+    }
+    .active .logo {
+        z-index: 2;
+    }
+    .burger {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 2
+    }
+    .burger .span {
+        background: #fff;
+        width: 50px;
+        height: 3px;
+    }
+    .burger .span:nth-child(2) {
+        background: #fff;
+        width: 30px;
+        align-self: end;
+    }
+    .menu-mobile .content_burger {
+        position: absolute;
+        top: -1000px;
+        bottom: 0;
+        left: 0;
+        right: 0px;
+        background: var(--line-color);
+        z-index: 1;
+        width: 100vw;
+        height: 100vh;
+        transition: all .3s ease;
+    }
+    .active .content_burger {
+        top: 0;
+    }
+    .active .link {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50%;
+        gap: 50px;
+    }
+    .active .link a {
+        color: #798A9E;
+        font-size: 36px;
+    }
+    .active .link .active-link {
+        color: var(--white);
+    }
+    .menu-mobile {
+        color: var(--white);
+    }
+    .menu-mobile .logo svg {
+        fill: var(--line-color);
+    }
+    .active .logo svg {
+        fill: var(--white);
+    }
+}

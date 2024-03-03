@@ -1,0 +1,130 @@
+@import url('../variables.css');
+.forum {
+    margin-bottom: 50px;
+}
+
+.forum .container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.article {
+    display: flex;
+    gap: 50px;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    max-height: 500px;
+}
+
+.article img {
+    width: 40%;
+    height: 40%;
+    max-height: 300px;
+    border-radius: 10px;
+    transition: all .3s ease;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 5%;
+}
+
+.article h3 {
+    color: var(--black, #1E1E1E);
+    font-family: 'Gilroy-Semibold';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+}
+
+.article__content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.article__content div:nth-child(3) {
+    margin-top: 10%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.article__content div svg {
+    transform: scale(1.6);
+    transition: all .3s ease;
+}
+
+.article__content .date {
+    font-size: 16px;
+    margin-top: -20px;
+}
+
+.article__content:nth-child(2) {
+    max-width: 700px;
+    width: 50%;
+    color: var(--black);
+    font-family: 'Gilroy-Thin';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 160%;
+}
+
+.article button {
+    transition: all .3s ease;
+    width: 300px;
+}
+
+.article__content .black-button {
+    margin-top: auto;
+    justify-self: end;
+    margin-bottom: 0px;
+}
+
+@media only screen and (max-width: 700px) {
+    .article {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-height: 100%;
+    }
+    .article img {
+        width: 100%;
+        height: 40%;
+        border-radius: 10px;
+        transition: all .3s ease;
+    }
+    .article__content:nth-child(2) {
+        max-width: 700px;
+        width: 100%;
+        color: var(--black);
+        font-family: 'Gilroy-Thin';
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: 160%;
+    }
+    .article h3 {
+        max-width: 700px;
+        width: 100%;
+        font-size: calc(1vh + 1vh * 2);
+    }
+    .article p {
+        width: 100%;
+        max-width: 70vw;
+        font-size: calc((1vh + 1vh));
+    }
+    .article button {
+        width: 100%;
+        align-self: center;
+    }
+}

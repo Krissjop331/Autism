@@ -1,0 +1,111 @@
+@import url('../variables.css');
+.reg {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    padding-bottom: 50px;
+}
+
+.reg .img {
+    background-image: url('../../img/bg.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    align-self: center;
+    width: 50vw;
+    height: 100vh;
+}
+
+.register {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    gap: 50px;
+    width: 50%;
+}
+
+.register .arrow-back {
+    width: 50px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid var(--line-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register h1 {
+    color: var(--line-color);
+    font-family: 'Gilroy-Semibold';
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.register .arrow-back svg {
+    fill: var(--line-colors);
+    transform: rotate(-90deg);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: #1E1E1E;
+    font-family: 'Gilroy-Medium';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+input {
+    background: transparent;
+    border-radius: 4px;
+    border: 1px solid var(--placeholder, #8E8E8E);
+    display: inline-flex;
+    width: 70%;
+    padding: 20px 30px;
+    height: 20px;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: 18px;
+    color: #000;
+}
+
+input::placeholder {
+    font-size: 16px;
+}
+
+.groups {
+    display: flex;
+    flex-direction: row;
+    gap: 0px;
+}
+
+.groups .phone {
+    margin-left: -10px;
+}
+
+form #sub {
+    width: 78%;
+    background-color: var(--line-color);
+    color: var(--white);
+    transition: all .3s ease;
+}
+
+@media only screen and (max-width: 700px) {
+    .reg .img {
+        display: none;
+    }
+}

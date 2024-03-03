@@ -1,0 +1,112 @@
+@import url('/css/variables.css');
+@import url('../hover.css');
+button {
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 200px) {
+    .content {
+        margin: 50px;
+        margin-top: 20px;
+        max-height: 85vh;
+        height: 100%;
+        min-height: 85vh;
+        border-radius: 30px;
+        flex-shrink: 0;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%), url('../../img/Main.png'), lightgray;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0 60px;
+    }
+    .text-content {
+        color: #F0F0F0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .text-content h1 {
+        font-family: 'SFProText-Semibold';
+        font-size: 64px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 78px;
+    }
+    .text-content p {
+        font-family: 'Gilroy-Thin';
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 24px;
+        width: 400px;
+    }
+    .buttons {
+        margin-bottom: 50px;
+        display: flex;
+        gap: 50px;
+    }
+    button {
+        display: flex;
+        padding: 20px 80px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        border: none;
+        border-radius: 7px;
+        /* TEXT */
+        font-family: 'Gilroy-Semibold';
+        font-size: 18px;
+        font-style: normal;
+        line-height: normal;
+        transition: all .3s ease-out;
+    }
+    .black-button {
+        background: var(--line-color);
+        color: var(--white);
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .content {
+        padding: 0 20px;
+    }
+    button {
+        padding: 20px 20px;
+    }
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+    }
+    .buttons button {
+        width: 60%;
+    }
+    .text-content {
+        color: #F0F0F0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .text-content h1 {
+        font-family: 'SFProText-Semibold';
+        font-size: 11vw;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 12vw;
+    }
+    .text-content p {
+        font-family: 'Gilroy-Thin';
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 24px;
+        width: 80%;
+    }
+}
+
+.link-block {
+    display: flex;
+    gap: 30px;
+}

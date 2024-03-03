@@ -1,0 +1,726 @@
+@import url('../variables.css');
+section.wrapper {
+    display: block !important;
+}
+
+.container_admin {
+    display: flex;
+    position: relative;
+}
+
+.container_admin .menu[data-close="false"] {
+    background: var(--line-color);
+    display: flex;
+    flex-direction: column !important;
+    align-items: flex-start;
+    padding-top: 20px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.menu[data-close="true"] {
+    background: var(--line-color);
+    display: flex;
+    flex-direction: column !important;
+    align-items: flex-start;
+    padding-top: 70px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+
+/* .menu-content {
+    align-self: start;
+    margin-top: 70px;
+} */
+
+.menu[data-close="false"] .menu-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px 50px 20px 0px;
+}
+
+.menu[data-close="true"] .menu-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0px;
+}
+
+.container_admin .menu .logo svg[data-white] {
+    fill: #fff;
+    transform: scale(0.7);
+}
+
+.container_admin .menu .logo {
+    position: relative;
+    justify-self: left;
+    margin-left: 20px;
+    height: 100px;
+    margin-top: -10px;
+}
+
+.menu[data-close="true"] .logo {
+    margin-left: 5px;
+    transform: scale(.8);
+}
+
+.menu[data-close="true"] .link p,
+.menu[data-close="true"] .link[data-exit] p {
+    font-size: 0;
+}
+
+.menu[data-close="true"] .link[data-exit] {
+    margin-left: 20px;
+    gap: 0;
+}
+
+.link[data-exit] {
+    margin-bottom: 39px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu[data-close="true"] .link[data-exit] {
+    margin-bottom: 80px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.link[data-menu-profile] {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: center;
+}
+
+.link[data-menu-profile] div {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.link[data-exit] a,
+.link[data-menu-profile] a {
+    color: #fff;
+    font-size: calc(var(--size) / 1.2);
+    transition: all .3s ease;
+}
+
+.link[data-exit] a:hover,
+.link[data-menu-profile] a:hover {
+    color: #b3b3b3 !important;
+    font-size: calc(var(--size) / 1.2) !important;
+    transition: all .3s ease;
+}
+
+.link[data-menu-profile] svg {
+    width: 30px;
+    height: 30px;
+    fill: var(--white);
+    transition: all .3s ease;
+}
+
+.link[data-exit] svg path,
+.link[data-menu-profile] svg path {
+    stroke: var(--white);
+    transition: all .3s ease;
+}
+
+.link[data-exit] svg:hover path,
+.link[data-menu-profile] svg:hover path {
+    stroke: #b3b3b3;
+    transition: all .3s ease;
+}
+
+.link[data-menu-profile] #favourites-news-link svg path {
+    stroke: var(--line-color) !important;
+}
+
+.link[data-menu-profile] #favourites-news-link svg:hover path {
+    stroke: var(--line-color) !important;
+    transition: all .3s ease;
+}
+
+.menu[data-close="false"] .close {
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    right: 0;
+    left: 80%;
+    width: 30px;
+    height: 30px;
+}
+
+.menu[data-close="false"] .close::after,
+.menu[data-close="false"] .close::before {
+    position: absolute;
+    content: '';
+    width: 3px;
+    height: 30px;
+    border-radius: 5px;
+    background: var(--white);
+    transform-origin: center bottom;
+    transition: all .2s ease;
+}
+
+.menu[data-close="false"] .close::after {
+    left: 0%;
+    transform: translateX(-70%) rotate(40deg);
+}
+
+.menu[data-close="false"] .close::before {
+    left: 57%;
+    transform: translateX(10%) rotate(-40deg);
+}
+
+.menu[data-close="false"] .close:hover::before,
+.menu[data-close="false"] .close:hover::after {
+    height: 35px;
+}
+
+.menu[data-close="false"] .close:active::before,
+.menu[data-close="false"] .close:active::after {
+    transform: translateX(0%) rotate(30deg);
+}
+
+
+/* &------------------------------------------------------- */
+
+
+/* & CLOSE TRUE MENU */
+
+
+/* &------------------------------------------------------- */
+
+.menu[data-close="true"] .close {
+    position: absolute;
+    top: 20px;
+    bottom: 0;
+    right: 0;
+    left: 70%;
+    width: 35px;
+    height: 30px;
+    background: var(--line-color);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.menu[data-close="true"] .close::after,
+.menu[data-close="true"] .close::before {
+    position: absolute;
+    content: '';
+    width: 3px;
+    height: 30px;
+    border-radius: 5px;
+    background: var(--white);
+    transform-origin: center bottom;
+    transition: all .2s ease;
+    transform: translateX(70%) rotate(90deg);
+    top: -20px;
+    left: 70%;
+}
+
+.menu[data-close="true"] .close::after {
+    left: -50%;
+}
+
+.menu[data-close="true"] .close::before {
+    left: -50%;
+    top: -10px;
+}
+
+.menu[data-close="true"] .close:active::before,
+.menu[data-close="true"] .close:active::after {
+    /* transform: translateX(0%) rotate(80deg); */
+    left: -30%;
+    width: 4px;
+}
+
+
+/* !---------------------------------------------- */
+
+
+/*!  INFO PROFILE */
+
+
+/* !---------------------------------------------- */
+
+.container_admin {
+    container-type: inline-size;
+}
+
+.container_menu-info {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 20px 20px 50px;
+    flex-grow: 1;
+    position: relative;
+    &::before {
+        content: '';
+        width: 100%;
+        position: absolute;
+        height: 50px;
+        background: var(--line-color);
+        color: var(--white);
+        z-index: -1;
+        border-radius: 10px;
+    }
+}
+
+.container_menu-info h1 {
+    font-size: calc(var(--size) * 1.8);
+    color: #fff;
+    margin-left: 50px;
+    font-family: 'Gilroy-Semibold';
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.container_menu-info {
+    overflow: hidden;
+}
+
+.container_menu-info-wrap {
+    margin-top: 20px;
+    border: 3px solid var(--line-color);
+    box-shadow: 0px 0px 5px var(--line-color);
+    border-radius: 10px;
+    padding: 30px;
+    position: relative;
+    display: flex;
+    gap: 50px;
+}
+
+.container_menu-info-wrap .profile_image {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all .3s ease;
+}
+
+.container_menu-info-wrap .profile_image::after {
+    content: 'Add Photo';
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 50px;
+    background: var(--line-color);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    z-index: 1;
+    pointer-events: none;
+    transition: all .3s ease;
+    opacity: 0.3;
+    color: var(--white);
+    font-family: 'Gilroy-Semibold';
+    font-weight: normal;
+}
+
+.container_menu-info-wrap .profile_image:hover::after {
+    opacity: 1;
+}
+
+.container_menu-info-wrap .profile_image:hover svg {
+    transition: all .3s ease;
+    transform: scale(2);
+}
+
+.container_menu-info-wrap .profile_image:active::after {
+    color: var(--line-color);
+    background: var(--white);
+}
+
+.container_menu-info-wrap .profile_image svg {
+    display: block;
+    width: 50px;
+    height: 50px;
+    fill: var(--white);
+    transition: all .3s ease;
+    opacity: .5;
+}
+
+.container_menu-info-wrap .profile_info {
+    width: 100%;
+}
+
+.container_menu-info-wrap .profile_info input {
+    width: 87%;
+}
+
+.container_menu-info-wrap #sub {
+    width: 40%;
+}
+
+.profile_accordion {
+    margin-top: 50px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.profile_accordion-menu {
+    display: flex;
+    gap: 30px;
+    border-bottom: 3px solid var(--line-color);
+}
+
+.profile_accordion-menu .active-wrap {
+    position: relative;
+    transition: all .3s ease;
+    &::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        background: var(--line-color);
+        transition: all .3s ease;
+    }
+    &:hover::before {
+        background: var(--black);
+        width: 70%;
+    }
+    &:active::before {
+        width: 90%;
+        height: 4px;
+    }
+}
+
+.profile_accordion-menu .wrap h4 {
+    font-size: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all .3s ease;
+    &:hover {
+        color: #305685;
+        font-size: 20.5px;
+    }
+}
+
+
+/* PROFILE IMAGE */
+
+@media only screen and (min-width: 850px) {
+    /* !---------------------------------------------- */
+    /*! ACCORDION MENU */
+    /* !---------------------------------------------- */
+    /* TODO *------------------------------------------------------  */
+    /* ! Активная вкладка */
+    /* TODO: Добавить в js выбор вкладок, то есть аккордеон */
+    /* TODO *------------------------------------------------------ */
+    /* ! Сам контент */
+    .profile_accordion-info[data-columns] {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 50px;
+        container-type: inline-size;
+        container-name: info_columns;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .profile_accordion-info .wrap {
+        width: 100%;
+        max-width: 700px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: calc(100% + 10px);
+        max-height: 400px;
+        box-shadow: 0px 2px 2px var(--line-color);
+    }
+    .profile_accordion-info .wrap .img {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+    }
+    .profile_accordion-info .wrap h4 {
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        padding-left: 10px;
+    }
+    .profile_accordion-info .wrap p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        line-height: 180%;
+        max-height: 110px;
+        /* Устанавливаем максимальную высоту */
+        overflow: hidden;
+        padding-left: 10px;
+    }
+    .profile_accordion-info .wrap .date {
+        font-weight: 100;
+        font-size: 16px;
+    }
+    .profile_accordion-info .wrap button {
+        transition: all .2s ease;
+    }
+    .profile_accordion-info .wrap button:hover {
+        border: 3px solid var(--line-color);
+    }
+    .profile_accordion-info a .wrap {
+        transition: all .3s ease;
+        border-radius: 10px;
+    }
+    .profile_accordion-info a:hover .wrap {
+        box-shadow: 0px 0px 5px var(--line-color);
+    }
+}
+
+@container (width<900px) {
+    .container_menu-info-wrap {
+        padding: 10px 10px 10px 10px;
+        gap: 20px;
+        flex-direction: column;
+    }
+    .container_menu-info {
+        display: flex;
+        flex-direction: column;
+        margin: 20px 20px 20px 50px;
+        flex-grow: 1;
+    }
+    .container_menu-info-wrap .profile_image {
+        height: 40vw;
+    }
+    .container_menu-info-wrap .profile_image::after {
+        content: 'Add Photo';
+        position: absolute;
+        top: 80%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        height: 35px;
+        background: var(--line-color);
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        z-index: 1;
+        pointer-events: none;
+        transition: all .3s ease;
+        opacity: 0.3;
+        color: var(--white);
+        font-family: 'Gilroy-Semibold';
+        font-weight: normal;
+    }
+    .profile_info form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-items: center;
+    }
+    .profile_info .form-group {
+        width: 100%;
+    }
+    .container_menu-info-wrap .profile_info input {
+        width: auto;
+    }
+}
+
+@container (width<700px) {
+    .profile_accordion-info[data-columns] {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 30px;
+        container-type: inline-size;
+        container-name: info_columns;
+    }
+    .profile_info #sub {
+        width: 100%;
+    }
+}
+
+
+/* ! PROFILE < 850px */
+
+@container (width<850px) {
+    /* ! Сам контент */
+    .profile_accordion-info[data-columns] {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 50px;
+        container-type: inline-size;
+        container-name: info_columns;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .profile_accordion-info .wrap {
+        width: 100%;
+        max-width: 700px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        height: 400px;
+        box-shadow: 0px 2px 2px var(--line-color);
+    }
+    .profile_accordion-info .wrap .img {
+        background: url('../../img/img2.jpg') no-repeat;
+        background-size: cover;
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+    }
+    .profile_accordion-info .wrap h4 {
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        padding-left: 10px;
+    }
+    .profile_accordion-info .wrap p {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        line-height: 180%;
+        max-height: 110px;
+        /* Устанавливаем максимальную высоту */
+        overflow: hidden;
+        padding-left: 10px;
+    }
+    .profile_accordion-info .wrap .date {
+        font-weight: 100;
+        font-size: 16px;
+    }
+    .profile_accordion-info .wrap button {
+        transition: all .2s ease;
+    }
+    .profile_accordion-info .wrap button:hover {
+        border: 3px solid var(--line-color);
+    }
+    .profile_accordion-info a .wrap {
+        transition: all .3s ease;
+        border-radius: 10px;
+    }
+    .profile_accordion-info a:hover .wrap {
+        box-shadow: 0px 0px 5px var(--line-color);
+    }
+}
+
+@container (width<400px) {
+    /* MENU */
+    .container_admin .menu[data-close="false"] {
+        background: var(--line-color);
+        display: flex;
+        flex-direction: column !important;
+        align-items: flex-start;
+        padding-top: 36px;
+        position: absolute;
+        top: 0;
+        width: 110%;
+        left: 0;
+        bottom: 0;
+        z-index: 1200;
+    }
+    /* CONTENT */
+    .container_menu-info {
+        display: flex;
+        flex-direction: column;
+        margin: 20px 0px 11px 11px;
+        flex-grow: 1;
+    }
+    .menu[data-close="true"] .close {
+        position: absolute;
+        top: 20px;
+        bottom: 0;
+        right: 0;
+        left: 50%;
+        width: 35px;
+        height: 30px;
+        background: var(--line-color);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .profile_accordion-info[data-columns] {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 20px;
+        container-type: inline-size;
+        container-name: info_columns;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    /* CONTENT MENU KOURSE */
+    .profile_accordion-menu .wrap h4 {
+        font-size: 14px;
+        &:hover {
+            color: rgb(48, 86, 133);
+            font-size: 14.5px;
+        }
+    }
+}
+
+
+/* Сообщение об изменении даннных */
+
+.notification {
+    display: none;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    position: fixed;
+    /* Изменили на fixed */
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    z-index: 100;
+}
+
+.close-notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.admin-links-container {
+    display: none;
+    margin-top: -10px;
+}
+
+.admin-links {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start !important;
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.admin-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px !important;
+    transition: color 0.3s ease;
+}
+
+.admin-links a:hover {
+    color: #b3b3b3;
+}

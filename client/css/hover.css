@@ -1,0 +1,103 @@
+.black-button:hover {
+    background: var(--white);
+    color: var(--line-color);
+}
+
+.white-button:hover {
+    background: var(--line-color);
+    color: var(--white);
+}
+
+a[data-active-hover]:hover {
+    font-size: 17px;
+    font-family: 'Gilroy-Semibold';
+    transition: all .3s ease;
+}
+
+.border-button:hover {
+    color: var(--white);
+    background: var(--line-color);
+    border: none;
+    outline: none;
+}
+
+.featured img:hover {
+    border-radius: 5%;
+    margin-top: 0px;
+    filter: brightness(90%)
+}
+
+.filter img:hover {
+    border-radius: 50%;
+    margin-top: 10px;
+}
+
+.article img:hover {
+    width: 39%;
+}
+
+.article .black-button:hover {
+    background: var(--line-color);
+    color: var(--white);
+    width: 280px;
+}
+
+footer .menu a:hover {
+    color: #fff;
+}
+
+footer .arrow-start:hover {
+    background: none;
+}
+
+footer .arrow-start:hover svg {
+    fill: var(--white);
+}
+
+.social svg:hover {
+    fill: var(--white);
+}
+
+@media only screen and (max-width: 700px) {
+    .article img:hover {
+        width: 95%;
+    }
+}
+
+#sub:hover {
+    background-color: transparent !important;
+    border: 2px solid var(--line-color);
+    color: var(--line-color);
+}
+
+.block svg:hover {
+    transform: scale(.9);
+}
+
+.arrow-back:hover svg {
+    transform: scale(1);
+    background: #000;
+    fill: #fff !important;
+    border-radius: 50%;
+    transition: all .3s ease;
+}
+
+
+/* SVG */
+
+.delete-svg {
+    stroke: var(--line-color);
+    transition: all .3s ease;
+}
+
+.delete-svg:hover {
+    transform: scale(1.1);
+}
+
+.delete-svg:active {
+    transform: scale(.8);
+}
+
+.article__content div svg:hover {
+    transform: scale(1.4);
+}

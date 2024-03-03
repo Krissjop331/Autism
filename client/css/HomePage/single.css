@@ -1,0 +1,102 @@
+@import url('../variables.css');
+.single {
+    margin-top: 40px;
+    & .container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        /* & h2 {
+            padding: 0;
+            margin: 0;
+            margin-bottom: 10px;
+            font-size: 60px;
+        } */
+        & .date {
+            font-size: 14px;
+            font-weight: 100;
+        }
+        & .min-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: -20px;
+            & .single-info {
+                display: flex;
+                gap: 30px;
+                align-items: center;
+                & .like-svg {
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    transition: all .3s ease;
+                    & p {
+                        font-size: 14px;
+                    }
+                }
+                & svg {
+                    transition: all .3s ease;
+                }
+                & .active {
+                    fill: #1a2e477c;
+                }
+                & .like-svg:hover svg {
+                    fill: #1A2E47;
+                    transform: scale(.8);
+                }
+                & .favorites-svg:hover svg {
+                    fill: #1A2E47;
+                    transform: scale(.8);
+                }
+                & .like-svg:active svg {
+                    fill: #1a2e477c;
+                }
+            }
+        }
+        & .desc {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-top: 20px;
+            & p {
+                line-height: 180%;
+                font-size: 16px;
+            }
+            & img {
+                max-height: 500px;
+                max-width: 80%;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.content {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.35) 100%), url(../../img/222.jpg  ), lightgray;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    min-height: 40vw;
+    margin: 0;
+    margin-top: -25px;
+    position: relative;
+    & .zag-head {
+        position: absolute;
+        top: 50%;
+        left: 35%;
+        color: #ddddddcb;
+        font-size: 96px;
+        transition: .2s ease-in-out;
+    }
+    & .zag-head:hover {
+        color: #fff;
+    }
+}
+
+.favorites-svg svg {
+    fill: #1A2E47;
+}
+
+.favorites-svg:active svg path {
+    fill: #1a2e477c;
+}

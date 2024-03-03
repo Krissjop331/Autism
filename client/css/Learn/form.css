@@ -1,0 +1,95 @@
+@import url('/css/variables.css');
+.learn_wrap {
+    margin-left: 80px;
+}
+
+.filters .form-group {
+    width: 100px;
+    display: flex;
+    gap: 10px;
+}
+
+.filters label {
+    color: var(--Black, #1E1E1E);
+    font-family: 'Gilroy-Semibold';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.block {
+    display: flex;
+    gap: 30px;
+    width: calc(100% * 3);
+}
+
+.block svg {
+    fill: var(--line-color);
+    transition: all .3s ease;
+    margin-top: 5px;
+}
+
+.filters select {
+    position: relative;
+    font-size: 16px;
+    padding: 15px 40px;
+    border-radius: 10px;
+    outline: 0;
+}
+
+.new-select {
+    position: relative;
+    border: 1px solid var(--line-color);
+    padding: 10px 50px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 5px;
+    margin-left: -30px;
+    color: var(--placeholder, #8E8E8E);
+    font-family: 'Gilroy-Regular';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.new-select__list {
+    position: absolute;
+    top: 255px;
+    left: 80px;
+    border: 2px solid var(--line-color);
+    cursor: pointer;
+    width: 200px;
+    z-index: 2;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    color: var(--line-color);
+    user-select: none;
+    color: var(--placeholder, #8E8E8E);
+    font-family: 'Gilroy-Regular';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.new-select__item span {
+    display: block;
+    padding: 10px 15px;
+    box-shadow: 0 0px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: all .3s ease;
+}
+
+.new-select__item span:hover {
+    color: var(--line-color);
+    box-shadow: 0 0px 3px var(--line-color);
+}
+
+.active-fill {
+    fill: green !important;
+    transform: scale(1)!important;
+}
