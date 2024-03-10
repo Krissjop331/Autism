@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             require: true,
         },
+        login: {
+            type: DataTypes.STRING,
+            unique: true,
+            allownNull: false
+        },
         email: {
             type: DataTypes.STRING,
             require: true,
@@ -23,6 +28,30 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             require: true,
             min: 6
+        },
+        birthday: {
+            type: DataTypes.DATETIME
+        },
+        avatar_url: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        phone_number: {
+            type: DataTypes.INTEGER,
+            max: 12,
+            allowNull: true
+        },
+        is_active: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        likes: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
+        },
+        dislikes: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         },
         blocked: {
             type: DataTypes.BOOLEAN,
@@ -34,11 +63,6 @@ module.exports = (sequelize, DataTypes) => {
 
     User.associate = function(models) {
         User.belongsTo(models.Role, { foreignKey: "role_id" });
-        User.hasMany(models.Forum, { foreignKey: "forum_id" });
-        User.hasMany(models.Comment, {foreignKey: "user_id" });
-        User.hasMany(models.Course, {foreignKey: "course_id" });
-        User.hasMany(models.FeatureCourse, {foreignKey: "user_id" });
-        User.hasMany(models.FeatureForum, {foreignKey: "user_id" });
     }
 
     return User;
