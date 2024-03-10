@@ -34,11 +34,11 @@ module.exports = (sequelize, DataTypes) => {
 
     User.associate = function(models) {
         User.belongsTo(models.Role, { foreignKey: "role_id" });
-        User.belongsTo(models.Forum, { foreignKey: "forum_id" });
-        User.belongsTo(models.Comment, {foreignKey: "comment_id" });
-        User.belongsTo(models.Course, {foreignKey: "course_id" });
-        User.belongsTo(models.FeatureCourse, {foreignKey: "featured_course_id" });
-        User.belongsTo(models.FeatureForum, {foreignKey: "featured_forum_id" });
+        User.hasMany(models.Forum, { foreignKey: "forum_id" });
+        User.hasMany(models.Comment, {foreignKey: "user_id" });
+        User.hasMany(models.Course, {foreignKey: "course_id" });
+        User.hasMany(models.FeatureCourse, {foreignKey: "user_id" });
+        User.hasMany(models.FeatureForum, {foreignKey: "user_id" });
     }
 
     return User;

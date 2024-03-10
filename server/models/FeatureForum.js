@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     FeatureForum.associate = function(models) {
-        FeatureForum.hasMany(models.User, { foreignKey: "featured_forum_id" });
-        FeatureForum.hasMany(models.Forum, { foreignKey: "featured_forum_id" });
+        FeatureForum.belongsTo(models.User, { foreignKey: "user_id" });
+        FeatureForum.belongsTo(models.Forum, { foreignKey: "forum_id" });
         // Course.belongsTo(models.FeaturedCourse, { foreignKey: "featured_course_id" });
     }
 

@@ -10,21 +10,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             require: true,
         },
-        description: {
+        short_description: {
             type: DataTypes.STRING,
             require: true,
-        },
-        author: {
-            type: DataTypes.STRING,
-            require: true,
-            unique: true
+            min: 255
         },
         look: {
             type: DataTypes.INTEGER
         },
-        image: {
-            type: DataTypes.STRING
-        }
     }, {
         tableName: 'forum'
     });
@@ -32,8 +25,11 @@ module.exports = (sequelize, DataTypes) => {
 
     Forum.associate = function(models) {
         Forum.belongsTo(models.Comment, { foreignKey: "forum_comment_id" });
-        Forum.hasMany(models.User, { foreignKey: "forum_id" });
-        Forum.hasMany(models.FeatureForum, { foreignKey: "featured_forum_id" });
+        Forum.belongsTo(models.User, { foreignKey: "user_id" });
+        Forum.hasMany(models.FeatureForum, { foreignKey: "forum_id" });
+        Forum.belongsTo(models.ForumText, {foreignKey: "forum_text_id"});
+        Forum.belongsTo(models.ForumImage, {foreignKey: "forum_image_id"});
+        Forum.belongsTo(models.ForumImage, {foreignKey: "forum_link_id"});
     }
 
     return Forum;

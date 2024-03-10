@@ -37,10 +37,9 @@ module.exports = (sequelize, DataTypes) => {
     Course.associate = function(models) {
         // Course.belongsTo(models.Comment, { foreignKey: "course_comment_id" });
         Course.belongsTo(models.Comment, { foreignKey: "course_comment_id" });
-        Course.hasMany(models.User, { foreignKey: "course_id" });
-        Course.belongsTo(models.FeatureCourse, { foreignKey: "featured_course_id" });
+        Course.belongsTo(models.User, { foreignKey: "user_id" });
+        Course.hasMany(models.FeatureCourse, { foreignKey: "course_id" });
     }
-
 
     return Course;
 };

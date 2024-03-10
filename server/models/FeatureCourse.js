@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     FeatureCourse.associate = function(models) {
-        FeatureCourse.hasMany(models.User, { foreignKey: "featured_course_id" });
+        FeatureCourse.belongsTo(models.User, { foreignKey: "user_id" });
         FeatureCourse.belongsTo(models.Course, { foreignKey: "course_id" });
         // Course.belongsTo(models.FeaturedCourse, { foreignKey: "featured_course_id" });
     }
