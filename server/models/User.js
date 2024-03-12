@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             min: 6
         },
         birthday: {
-            type: DataTypes.DATETIME
+            type: DataTypes.DATE
         },
         avatar_url: {
             type: DataTypes.STRING,
@@ -63,6 +63,27 @@ module.exports = (sequelize, DataTypes) => {
 
     User.associate = function(models) {
         User.belongsTo(models.Role, { foreignKey: "role_id" });
+
+        // PARENTS
+        User.belongsToMany(User, { as: 'children', foreignKey: 'parent_id', through: 'ParentsUsers' });
+        User.belongsToMany(User, { as: 'parents', foreignKey: 'child_id', through: 'ParentsUsers' });
+
+        // DOCTOR
+        User.belongsToMany(User, { as: 'patients', foreignKey: 'doctor_id', through: 'DoctorUser' }); 
+        User.belongsToMany(User, { as: 'guardians', foreignKey: 'child_id', through: 'DoctorUser' }); 
+
+        // Friends
+        User.belongsToMany(User, { as: 'friends', foreignKey: 'friend_id', through: 'FriendsUser' }); 
+        User.belongsToMany(User, { as: 'users', foreignKey: 'user_id', through: 'FriendsUser' }); 
+
+        // DIAGNOSIS
+        User.hasMany(models.DiagnosisTestResult, {foreignKey: 'test_result_id'});
+        User.hasMany(models.UserDiagnosis, {foreignKey: 'user_diagnosis_id'});
+
+        // POSTS
+        User.hasMany(models.Posts, {foreignKey: 'post_id'});
+        User.hasMany(models.CommentPost, {foreignKey: 'comment_id'});
+        User.hasMany(models.FeaturedPost, {foreignKey: 'featured_posts_id'});
     }
 
     return User;
