@@ -7,7 +7,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         title: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING(50),
+            min: 3,
+            max: 50
+        },
+        slug: {
+            type: DataTypes.STRING(50),
+            min: 3,
+            max: 50
         },
         likes: {
             type: DataTypes.INTEGER

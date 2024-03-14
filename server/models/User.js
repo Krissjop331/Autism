@@ -7,27 +7,32 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         first_name: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(50),
             require: true,
+            max: 50
         },
         last_name: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(50),
             require: true,
+            max: 50
         },
         login: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(80),
             unique: true,
-            allownNull: false
+            allownNull: false,
+            max: 80
         },
         email: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(80),
             require: true,
-            unique: true
+            unique: true,
+            max: 80
         },
         password: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(80),
             require: true,
-            min: 6
+            min: 6,
+            max: 80
         },
         birthday: {
             type: DataTypes.DATE
@@ -37,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         phone_number: {
-            type: DataTypes.INTEGER,
-            max: 12,
+            type: DataTypes.STRING,
+            max: 13,
             allowNull: true
         },
         is_active: {
@@ -64,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = function(models) {
         User.belongsTo(models.Role, { foreignKey: "role_id" });
 
-        // PARENTS
-        User.belongsToMany(User, { as: 'children', foreignKey: 'parent_id', through: 'ParentsUsers' });
+        // PARENTSe
+        User.belongsToMany(User, { as: 'children', foreignKey: 'parent_id', through: 'ParentsUsrs' });
         User.belongsToMany(User, { as: 'parents', foreignKey: 'child_id', through: 'ParentsUsers' });
 
         // DOCTOR
@@ -84,6 +89,18 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.Posts, {foreignKey: 'post_id'});
         User.hasMany(models.CommentPost, {foreignKey: 'comment_id'});
         User.hasMany(models.FeaturedPost, {foreignKey: 'featured_posts_id'});
+
+        // SUBSCRIPTION
+        User.belongsToMany(User, { as: 'user', foreignKey: 'user_id', through: 'Subscription' }); 
+        User.belongsToMany(User, { as: 'author', foreignKey: 'author_id', through: 'Subscription' }); 
+
+        // HISTORY
+        User.hasMany(models.HistoryVisit, { foreignKey: 'history_id' }); 
+
+        // FORUM
+        User.hasMany(models.Topics, { foreignKey: 'topics_id' }); 
+        User.hasMany(models.CommentTopics, { foreignKey: 'comment_topics_id' }); 
+        User.hasMany(models.FeaturedForum, {foreignKey: 'featured_forum_id'});
     }
 
     return User;

@@ -11,10 +11,13 @@ module.exports = {
                 name: 'teacher',
             },
             {
-                name: "student"
+                name: "parents"
             },
             {
                 name: 'doctor',
+            },
+            {
+                name: 'children'
             }
         ]);
     },

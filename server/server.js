@@ -30,22 +30,22 @@ app.use((err, req, res, next) => {
 
 app.use('/', ApiRouter);
 
-async function syncModels() {
-    try {
-      await db.Role.sync({ force: true });
-      await db.Comment.sync({ force: true });
-    //   await db.Forum.sync({ force: true });
-    //   await db.User.sync({ force: true });
+// async function syncModels() {
+//     try {
+//       await db.Role.sync({ alter: false });
+//       // await db.Comment.sync({ force: true });
+//     //   await db.Forum.sync({ force: true });
+//     //   await db.User.sync({ force: true });
       
-      console.log("All models were synchronized successfully.");
-    } catch (error) {
-      console.error("Error during models synchronization:", error);
-    }
-}
+//       console.log("All models were synchronized successfully.");
+//     } catch (error) {
+//       console.error("Error during models synchronization:", error);
+//     }
+// }
 
 const start = async() => {
     // syncModels()
-    db.sequelize.sync({ force: true });
+    db.sequelize.sync({ alter: true });
 
 //     db.sequelize.sync({ alter: true })
 //   .then(() => console.log("All models were synchronized successfully."))

@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING
         },
     }, {
-        tableName: 'post_files'
+        tableName: 'post_files',
+        timestamps: false
     });
 
     PostFiles.associate = function(models) {

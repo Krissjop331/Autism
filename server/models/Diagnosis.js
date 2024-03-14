@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         name: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING(50),
+            max: 50
         },
         description: {
             type: DataTypes.TEXT

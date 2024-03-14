@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
         },
         status: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(50),
         }
     }, {
         tableName: 'user_diagnosis',

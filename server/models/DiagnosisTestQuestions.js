@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         text: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING(100),
+            max: 100
         },
         score: {
             type: DataTypes.INTEGER,

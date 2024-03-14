@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         title: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING(50),
+            max: 50
         },
     }, {
         tableName: 'tags'
