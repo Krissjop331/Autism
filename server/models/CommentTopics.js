@@ -15,17 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         dislikes: {
             type: DataTypes.INTEGER
         },
-        status: {
-            type: DataTypes.STRING
-        }
     }, {
         tableName: 'comment_topics'
     });
 
 
     CommentTopics.associate = function(models) {
-        CommentTopics.hasMany(models.Topics, { foreignKey: "topics_id" });
         CommentTopics.belongsTo(models.User, { foreignKey: "author_id" });
+        CommentTopics.belongsToMany(models.CommentTMany, { foreignKey: 'comment_topics_id', through: 'CommentTMany' }); 
     }
 
     return CommentTopics;

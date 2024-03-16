@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     Topics.associate = function(models) {
         Topics.hasMany(models.Forum, { foreignKey: "forum_id" });
         Topics.belongsTo(models.User, { foreignKey: "author_id" });
-        Topics.belongsTo(models.CommentTopics, { foreignKey: "comment_id" });
+        // Topics.belongsTo(models.CommentTopics, { foreignKey: "comment_id" });
+        Topics.belongsToMany(models.CommentTMany, { foreignKey: 'topics_id', through: 'CommentTMany' }); 
     }
 
     return Topics;
