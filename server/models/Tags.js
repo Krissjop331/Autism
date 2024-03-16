@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Tags.associate = function(models) {
         Tags.hasMany(models.Posts, { foreignKey: "post_id" });
+        Tags.hasMany(models.Forum, { foreignKey: "forum_id" });
     }
 
     return Tags;

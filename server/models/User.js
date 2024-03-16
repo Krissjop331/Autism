@@ -42,13 +42,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         phone_number: {
-            type: DataTypes.STRING,
-            max: 13,
+            type: DataTypes.STRING(13),
             allowNull: true
         },
         is_active: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        status: {
+            type: DataTypes.STRING(50),
+            defaultValue: 'loading'
         },
         likes: {
             type: DataTypes.INTEGER,

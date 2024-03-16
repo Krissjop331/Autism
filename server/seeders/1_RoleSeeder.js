@@ -8,9 +8,6 @@ module.exports = {
                 name: 'user',
             },
             {
-                name: 'teacher',
-            },
-            {
                 name: "parents"
             },
             {

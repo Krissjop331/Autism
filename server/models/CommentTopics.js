@@ -15,9 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         dislikes: {
             type: DataTypes.INTEGER
         },
-        looked: {
-            type: DataTypes.INTEGER
-        },
         status: {
             type: DataTypes.STRING
         }
