@@ -1,7 +1,12 @@
 
 module.exports = {
     async up(queryInterface, Sequelize) {
-        return queryInterface.bulkInsert('role', [{
+        return queryInterface.bulkInsert('role', [
+            {
+                // неопределена роль (для регистрации пользователя)
+                name: 'unknow'
+            },
+            {
                 name: 'admin',
             },
             {
@@ -16,10 +21,6 @@ module.exports = {
             {
                 name: 'children'
             },
-            {
-                // неопределена роль (для регистрации пользователя)
-                name: 'unknow'
-            }
         ]);
     },
 

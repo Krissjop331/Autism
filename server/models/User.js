@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true
         },
         phone_number: {
-            type: DataTypes.STRING(13),
+            type: DataTypes.STRING(11),
             allowNull: true
         },
         is_active: {
