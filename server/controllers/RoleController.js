@@ -83,18 +83,23 @@ class RoleController {
     
 
     async delete(req, res) {
-        const { id } = req.params;
-        if (!id) {
-            return CustomError.handleNotFound(res, "Идентификатор роли не предоставлен", 404);
-        }
+        try {
+            const { id } = req.params;
+            if (!id) {
+                return CustomError.handleNotFound(res, "Идентификатор роли не предоставлен", 404);
+            }
 
-        const role = await Role.findByPk(id);
-        if (!role) {
-            return CustomError.handleNotFound(res, "Роль не найдена", 404);
-        }
+            const role = await Role.findByPk(id);
+            if (!role) {
+                return CustomError.handleNotFound(res, "Роль не найдена", 404);
+            }
 
-        await role.destroy();
-        return res.status(200).json({ message: "Роль успешно удалена", status: 201 })
+            await role.destroy();
+            return res.status(200).json({ message: "Роль успешно удалена", status: 201 })
+        } catch (error) {
+            console.error("Ошибка при обновлении данных роли:", error);
+            return CustomError.handleInternalServerError(res, "Ошибка при обновлении данных роли");
+        }
     }
 }
 
