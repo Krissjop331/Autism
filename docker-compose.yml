@@ -19,17 +19,19 @@ services:
       - db
       
   app:
-    container_name: nodejs_app
+    container_name: nodejs_app_v2
     build: ./server
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      - db  
     environment:
       DATABASE_HOST: db
       DATABASE_USER: root
       DATABASE_PASSWORD: root
       DATABASE_NAME: authism_birge
+    # volumes:
+    #   - ./server/uploads:/uploads
 
 volumes:
   db_data:  
