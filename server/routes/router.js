@@ -6,7 +6,6 @@ const userRouter = require('./userRouter.js');
 const roleRouter = require('./roleRouter.js');
 const authRouter = require('./authRouter.js');
 
-
 router.use(`/${config.globalPrefix}/users`, userRouter);
 router.use(`/${config.globalPrefix}/roles`, roleRouter);
 router.use(`/${config.globalPrefix}/`, authRouter);

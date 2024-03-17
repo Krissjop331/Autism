@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const uploads = multer();
 
-const middlewareImage = require("../middleware/uploadImage.js");
+const middlewareImage = require("../middleware/uploadImageMiddleware.js");
 const UserController = require("../controllers/UserController.js");
 const UploadImage = require('../controllers/UploadImage.js');
 
