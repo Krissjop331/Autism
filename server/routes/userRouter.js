@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const uploads = multer();
-const upload = require("../middleware/uploadImage.js");
 
+const middlewareImage = require("../middleware/uploadImage.js");
 const UserController = require("../controllers/UserController.js");
 const UploadImage = require('../controllers/UploadImage.js');
 
 router.get('/', uploads.none(), UserController.getUsers);
-router.post('/', upload.single("image"), UploadImage.uploadImage);
+router.post('/', middlewareImage.single("image"), UploadImage.uploadImage);
 
 module.exports = router;
