@@ -7,7 +7,7 @@ class UploadImage {
 
     async uploadImage(req, res) {
         try {
-            let image = req.file;
+            let image = req.file.path;
             // let images = await Image.create({
             //     url: image
             // })
