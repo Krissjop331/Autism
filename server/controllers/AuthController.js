@@ -10,6 +10,8 @@ const CustomError = require('../Errors/errors');
 const db = require("../models/index");
 const User = db.User;
 const Role = db.Role;
+const DoctorUser = db.DoctorUser;
+const ParentsUsers = db.ParentsUsers;
 
 const generateToken = (id, roles) => {
     const payload = {
@@ -53,80 +55,90 @@ class AuthController {
 
     async signUp(req, res) {
         try {
-            const avatar_url = req.file.path;
+            const authToken = req.headers.authorization.split(" ")[1] || '';
 
-        if (!req.body) {
-            return CustomError.handleNotFound(res, "Данных нет", 400); // Изменено на статус 400
-        }
+            if (!req.body) {
+                return CustomError.handleNotFound(res, "Данных нет", 400); // Изменено на статус 400
+            }
 
-        const errors = validationResult(req);
-        if(!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+            const errors = validationResult(req);
+            if(!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
 
-        const users = await User.findAll();
-        const userLength = users.length + 1;
+            if(authToken !== '' || authToken != undefined) {
+                const { id, roles } = jwt.verify(authToken, secret);
+                const user = User.findOne({
+                    where: {id: id},
+                    include: [{
+                        model: Role
+                    }]});
 
-        const userEmail = await User.findOne({where: { email: req.body.email }});
-        const userLogin = await User.findOne({where: { login: req.body.login }});
-        if (userEmail) {
-            delete req.body.email;
-            delete req.body.password;
-            delete req.body.login;
+                const users = await User.findAll();
+                const userLength = users.length + 1;
+    
+                const userEmail = await User.findOne({where: { email: req.body.email }});
+                const userLogin = await User.findOne({where: { login: req.body.login }});
+                if (userEmail) {
+                    delete req.body.email;
+                    delete req.body.password;
+                    delete req.body.login;
+    
+                    return CustomError.handleDuplicateResource(res, "Данный пользователь c таким email уже существует", 409);
+                }
+                if (userLogin) {
+                    delete req.body.email;
+                    delete req.body.password;
+                    delete req.body.login;
+    
+                    return CustomError.handleDuplicateResource(res, "Данный пользователь c таким логином уже существует", 409);
+                }
+    
+            
+                const hashPassword = bcrypt.hashSync(req.body.password, 8);
+                const role = await Role.findOne({name: "unknow"});
+                const token = generateToken(userLength, role.name || "unknow");
+                req.headers.authorization = "Bearer" + " " + token;
+                res.cookie('authorization', "Bearer" + ' ' + token, { expires: new Date(Date.now() + 60 + 60 + 1000) });
+    
+                const userCreate = await User.create({
+                    first_name: req.body.first_name,
+                    last_name: req.body.last_name,
+                    email: req.body.email,
+                    avatar_url: "",
+                    birthday: req.body.birthday,
+                    phone_number: req.body.phone_number || undefined,
+                    password: hashPassword,
+                    is_active: false,
+                    status: 'loading',
+                    likes: 0,
+                    dislikes: 0,
+                    blocked: false,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    role_id: role.id || 1 || undefined
+                })
+                if(!userCreate) {
+                    return res.status(400).json({status: 400, message: "Пользователя не удалось создать"})
+                }
+    
+                delete req.body.first_name;
+                delete req.body.password;
+                delete req.body.email;
+                delete req.body.password;
+                delete req.body.login;
+                delete req.body.phone_number;
+                delete req.body.birthday;
 
-            return CustomError.handleDuplicateResource(res, "Данный пользователь c таким email уже существует", 409);
-        }
-        if (userLogin) {
-            delete req.body.email;
-            delete req.body.password;
-            delete req.body.login;
-
-            return CustomError.handleDuplicateResource(res, "Данный пользователь c таким логином уже существует", 409);
-        }
-
-       
-        const hashPassword = bcrypt.hashSync(req.body.password, 8);
-        const role = await Role.findOne({name: "unknow"});
-        const token = generateToken(userLength, role.name || "unknow");
-        req.headers.authorization = "Bearer" + " " + token;
-        res.cookie('authorization', "Bearer" + ' ' + token, { expires: new Date(Date.now() + 60 + 60 + 1000) });
-
-        const userCreate = await User.create({
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            email: req.body.email,
-            avatar_url: avatar_url || "",
-            birthday: req.body.birthday,
-            phone_number: req.body.phone_number || undefined,
-            password: hashPassword,
-            is_active: false,
-            status: 'loading',
-            likes: 0,
-            dislikes: 0,
-            blocked: false,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            role_id: role.id || 1 || undefined
-        })
-        if(!userCreate) {
-            return res.status(400).json({status: 400, message: "Пользователя не удалось создать"})
-        }
-
-        delete req.body.first_name;
-        delete req.body.password;
-        delete req.body.email;
-        delete req.body.password;
-        delete req.body.login;
-        delete req.body.phone_number;
-        delete req.body.birthday;
-
-        return res.status(200).json({status: 201, message: "Пользователь успешно создан", users: userCreate, token: req.headers.authorization})
+                return res.status(200).json({status: 201, message: "Пользователь успешно создан", users: userCreate, creator_user: user, token: req.headers.authorization})
+            } else {
+                return res.status(403).json({ message: "Вы не авторизованы", status: 403});
+            }
         } catch (error) {
             console.error("Ошибка на сервере", error);
             return CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
-
 
     async signIn(req, res) {
         try {
@@ -214,7 +226,6 @@ class AuthController {
     async confirmed(req, res) {
         try {
             const { id } = req.params;
-            const { status, role_id } = req.body;
             if (!req.body && !id) {
                 return CustomError.handleNotFound(res, "Данных нет", 400);
             }
@@ -226,8 +237,42 @@ class AuthController {
             user.status = req.body.status;
             user.role_id = req.body.role_id;
             await user.save();
-    
-            return res.status(200).json({ message: "Статус пользователя обновлен", status: 200, user, status: user.status });
+            let doctor;
+            let parents;
+
+            if (req.params.doctor_id || req.body.doctor_id || req.query.doctor_id) {
+                const doctorId = req.params.doctor_id || req.body.doctor_id || req.query.doctor_id;
+                const checkdoctor = await User.findOne({ where: { id: doctorId }, include: [{ model: Role }] });
+                if (checkdoctor && checkdoctor.Role.name === "doctor") {
+                    const duplicateDoctor = await DoctorUser.findOne({ where: { doctor_id: doctorId, child_id: user.id } });
+                    if (duplicateDoctor) {
+                        return CustomError.handleDuplicateResource(res, "Данный доктор уже привязан к этому пользователю", 409);
+                    }
+                    doctor = await DoctorUser.create({ doctor_id: doctorId, child_id: user.id });
+                } else if (checkdoctor) {
+                    return res.status(409).json({ message: "Данный пользователь не является доктором", status: 409 });
+                } else {
+                    return res.status(404).json({ message: "Пользователя не существует", status: 404 });
+                }
+            }
+            
+            if (req.params.parent_id || req.body.parent_id || req.query.parent_id) {
+                const parentId = req.params.parent_id || req.body.parent_id || req.query.parent_id;
+                const parentUser = await User.findOne({ where: { id: parentId }, include: [{ model: Role }] });
+                if (parentUser) {
+                    parents = await ParentsUsers.create({ parent_id: parentId, child_id: user.id });
+                } else {
+                    return res.status(404).json({ message: "Пользователя не существует", status: 404 });
+                }
+            }
+            
+            return res.status(200).json({
+                message: "Статус пользователя обновлен",
+                status: 200,
+                user,
+                doctor_user: doctor || '',
+                parents_user: parents || ''
+            });
         } catch (error) {
             console.error("Ошибка на сервере", error);
             return CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);

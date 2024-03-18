@@ -72,8 +72,8 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = function(models) {
         User.belongsTo(models.Role, { foreignKey: "role_id" });
 
-        // PARENTSe
-        User.belongsToMany(User, { as: 'children', foreignKey: 'parent_id', through: 'ParentsUsrs' });
+        // PARENTS
+        User.belongsToMany(User, { as: 'children', foreignKey: 'parent_id', through: 'ParentsUsers' });
         User.belongsToMany(User, { as: 'parents', foreignKey: 'child_id', through: 'ParentsUsers' });
 
         // DOCTOR
