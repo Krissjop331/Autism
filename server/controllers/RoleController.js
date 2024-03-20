@@ -10,7 +10,7 @@ class RoleController {
             const role = await Role.findAll();
             return role.length > 0 ? 
                 res.status(201).json({status: 201, message: "Роли получены", roles: role}) :
-                CustomError.handleInvalidData(res, "Пользователей нет", 201);
+                CustomError.handleInvalidData(res, "Ролей нет", 201);
         } catch (e) {
             console.error(`Ошибка извеления ролей: ${e.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
@@ -61,7 +61,7 @@ class RoleController {
 
     async update(req, res) {
         try {
-            const { id } = req.params;
+            const { id } = req.params || req.body || req.query;
             if (!id) {
                 return CustomError.handleNotFound(res, "Идентификатор роли не предоставлен", 404);
             }

@@ -17,7 +17,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 1,
+                role_id: 2,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -34,7 +34,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 2,
+                role_id: 3,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -51,7 +51,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 5,
+                role_id: 6,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -68,7 +68,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 5,
+                role_id: 6,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -85,7 +85,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 3,
+                role_id: 4,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -102,7 +102,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 3,
+                role_id: 4,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -119,7 +119,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 4,
+                role_id: 5,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()
@@ -136,7 +136,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
-                role_id: 4,
+                role_id: 5,
                 blocked: false,
                 createdAt: new Date(),  
                 updatedAt: new Date()

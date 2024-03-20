@@ -25,8 +25,8 @@ const generateToken = (id, roles) => {
 
 
 
-// Написать что при подтверждении или отклонении регистрации пользователя менялась и роль по параметру или req.body
-// Указывать тип изображения при отправке запроса в параметрах (http://localhost:3000/api/users?type=forum) (forum, users, posts)
+// Написать что при подтверждении или отклонении регистрации пользователя менялась и роль по параметру или req.body?
+// Если регистрирует админ он изначально может подтвердить пользователя
 
 class AuthController {
     async refreshTokenIfActive(req, res) {
@@ -68,11 +68,11 @@ class AuthController {
 
             if(authToken !== '' || authToken != undefined) {
                 const { id, roles } = jwt.verify(authToken, secret);
-                const user = User.findOne({
+                const user = await User.findOne({
                     where: {id: id},
                     include: [{
                         model: Role
-                    }]});
+                }]});
 
                 const users = await User.findAll();
                 const userLength = users.length + 1;
@@ -101,23 +101,75 @@ class AuthController {
                 req.headers.authorization = "Bearer" + " " + token;
                 res.cookie('authorization', "Bearer" + ' ' + token, { expires: new Date(Date.now() + 60 + 60 + 1000) });
     
-                const userCreate = await User.create({
-                    first_name: req.body.first_name,
-                    last_name: req.body.last_name,
-                    email: req.body.email,
-                    avatar_url: "",
-                    birthday: req.body.birthday,
-                    phone_number: req.body.phone_number || undefined,
-                    password: hashPassword,
-                    is_active: false,
-                    status: 'loading',
-                    likes: 0,
-                    dislikes: 0,
-                    blocked: false,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    role_id: role.id || 1 || undefined
-                })
+
+                let userCreate;
+                if(user.Role.name === "admin") {
+                    userCreate = await User.create({
+                        first_name: req.body.first_name,
+                        last_name: req.body.last_name,
+                        email: req.body.email,
+                        avatar_url: "",
+                        birthday: req.body.birthday,
+                        phone_number: req.body.phone_number || undefined,
+                        password: hashPassword,
+                        is_active: false,
+                        status: req.body.status || "loading",
+                        likes: 0,
+                        dislikes: 0,
+                        blocked: req.body.blocked || false,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        role_id: req.body.role_id || role.id || 1
+                    })
+
+                    let doctor;
+                    let parents;
+                    if (req.params.doctor_id || req.body.doctor_id || req.query.doctor_id) {
+                        const doctorId = req.params.doctor_id || req.body.doctor_id || req.query.doctor_id;
+                        const checkdoctor = await User.findOne({ where: { id: doctorId }, include: [{ model: Role }] });
+                        if (checkdoctor && checkdoctor.Role.name === "doctor") {
+                            const duplicateDoctor = await DoctorUser.findOne({ where: { doctor_id: doctorId, child_id: userLength } });
+                            if (duplicateDoctor) {
+                                return CustomError.handleDuplicateResource(res, "Данный доктор уже привязан к этому пользователю", 409);
+                            }
+                            doctor = await DoctorUser.create({ doctor_id: doctorId, child_id: userLength });
+                        } else if (checkdoctor) {
+                            return res.status(409).json({ message: "Данный пользователь не является доктором", status: 409 });
+                        } else {
+                            return res.status(404).json({ message: "Пользователя не существует", status: 404 });
+                        }
+                    }
+                    
+                    if (req.params.parent_id || req.body.parent_id || req.query.parent_id) {
+                        const parentId = req.params.parent_id || req.body.parent_id || req.query.parent_id;
+                        const parentUser = await User.findOne({ where: { id: parentId }, include: [{ model: Role }] });
+                        if (parentUser) {
+                            parents = await ParentsUsers.create({ parent_id: parentId, child_id: userLength });
+                        } else {
+                            return res.status(404).json({ message: "Пользователя не существует", status: 404 });
+                        }
+                    }
+                } else {
+                    userCreate = await User.create({
+                        first_name: req.body.first_name,
+                        last_name: req.body.last_name,
+                        email: req.body.email,
+                        avatar_url: "",
+                        birthday: req.body.birthday,
+                        phone_number: req.body.phone_number || undefined,
+                        password: hashPassword,
+                        is_active: false,
+                        status: 'loading',
+                        likes: 0,
+                        dislikes: 0,
+                        blocked: false,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        role_id: role.id || 1 || undefined
+                    })
+                } 
+                
+
                 if(!userCreate) {
                     return res.status(400).json({status: 400, message: "Пользователя не удалось создать"})
                 }
@@ -130,7 +182,7 @@ class AuthController {
                 delete req.body.phone_number;
                 delete req.body.birthday;
 
-                return res.status(200).json({status: 201, message: "Пользователь успешно создан", users: userCreate, creator_user: user, token: req.headers.authorization})
+                return res.status(200).json({status: 201, message: "Пользователь успешно создан", users: userCreate, user, role: user.Role, token: req.headers.authorization})
             } else {
                 return res.status(403).json({ message: "Вы не авторизованы", status: 403});
             }
