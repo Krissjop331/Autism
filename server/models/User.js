@@ -73,12 +73,12 @@ module.exports = (sequelize, DataTypes) => {
         User.belongsTo(models.Role, { foreignKey: "role_id" });
 
         // PARENTS
-        User.belongsToMany(User, { as: 'children', foreignKey: 'parent_id', through: 'ParentsUsers' });
-        User.belongsToMany(User, { as: 'parents', foreignKey: 'child_id', through: 'ParentsUsers' });
+        User.belongsToMany(User, { as: 'parents', foreignKey: 'parent_id', through: 'ParentsUsers' });
+        User.belongsToMany(User, { as: 'child', foreignKey: 'child_id', through: 'ParentsUsers' });
 
         // DOCTOR
-        User.belongsToMany(User, { as: 'patients', foreignKey: 'doctor_id', through: 'DoctorUser' }); 
-        User.belongsToMany(User, { as: 'guardians', foreignKey: 'child_id', through: 'DoctorUser' }); 
+        User.belongsToMany(User, { as: 'doctor', foreignKey: 'doctor_id', through: 'DoctorUser' }); 
+        User.belongsToMany(User, { as: 'patients', foreignKey: 'child_id', through: 'DoctorUser' }); 
 
         // Friends
         User.belongsToMany(User, { as: 'friends', foreignKey: 'friend_id', through: 'FriendsUser' }); 
@@ -101,7 +101,7 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.HistoryVisit, { foreignKey: 'history_id' }); 
 
         // FORUM
-        User.hasMany(models.Topics, { foreignKey: 'topics_id' }); 
+        User.hasMany(models.Topics, { foreignKey: 'user_id' }); 
         User.hasMany(models.CommentTopics, { foreignKey: 'comment_topics_id' }); 
         User.hasMany(models.FeaturedForum, {foreignKey: 'featured_forum_id'});
     }

@@ -169,7 +169,7 @@ class AuthController {
                     })
                 } 
                 
-
+                
                 if(!userCreate) {
                     return res.status(400).json({status: 400, message: "Пользователя не удалось создать"})
                 }

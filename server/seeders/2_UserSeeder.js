@@ -19,6 +19,7 @@ module.exports = {
                 dislikes: 0,
                 role_id: 2,
                 blocked: false,
+                status: "true",
                 createdAt: new Date(),  
                 updatedAt: new Date()
             },
@@ -36,6 +37,7 @@ module.exports = {
                 dislikes: 0,
                 role_id: 3,
                 blocked: false,
+                status: "true",
                 createdAt: new Date(),  
                 updatedAt: new Date()
             },
@@ -54,7 +56,8 @@ module.exports = {
                 role_id: 6,
                 blocked: false,
                 createdAt: new Date(),  
-                updatedAt: new Date()
+                updatedAt: new Date(),
+                status: "true",
             },
             {
                 first_name: 'children2',
@@ -68,6 +71,7 @@ module.exports = {
                 is_active: false,
                 likes: 0,
                 dislikes: 0,
+                status: "true",
                 role_id: 6,
                 blocked: false,
                 createdAt: new Date(),  
@@ -83,6 +87,7 @@ module.exports = {
                 avatar_url: "undefined",
                 phone_number: '22222222222',
                 is_active: false,
+                status: "true",
                 likes: 0,
                 dislikes: 0,
                 role_id: 4,
