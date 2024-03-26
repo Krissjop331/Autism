@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(50),
             max: 50
         },
-        module: {
-            type: DataTypes.STRING(50),
-            max: 50,
-            allowNull: false
-        }
+        // module: {
+        //     type: DataTypes.STRING(50),
+        //     max: 50,
+        //     allowNull: false
+        // }
         
     }, {
         tableName: 'resources_type',

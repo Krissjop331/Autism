@@ -7,6 +7,8 @@ const roleRouter = require('./roleRouter.js');
 const authRouter = require('./authRouter.js');
 const postsRouter = require('./postsRouter.js');
 const forumRouter = require('./forumRouter.js');
+const topicsRouter = require('./topicsRouter.js');
+const tagsRouter = require('./tagsRouter.js');
 const resourcesRouter = require('./resourcesRouter.js');
 const doctorUserRouter = require('./doctorUserRouter.js');
 const parentUserRouter = require('./parentUserRouter.js');
@@ -17,6 +19,8 @@ router.use(`/${config.globalPrefix}/parent_users`, parentUserRouter);
 router.use(`/${config.globalPrefix}/roles`, roleRouter);
 router.use(`/${config.globalPrefix}/`, authRouter);
 router.use(`/${config.globalPrefix}/forum`, forumRouter);
+router.use(`/${config.globalPrefix}/tags`, tagsRouter);
+router.use(`/${config.globalPrefix}/topics`, topicsRouter);
 router.use(`/${config.globalPrefix}/posts`, postsRouter);
 router.use(`/${config.globalPrefix}/resources`, resourcesRouter);
 

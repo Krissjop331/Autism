@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 3000
 
 # Команда запуска приложения
-CMD ["npm", "run", "start:dev"]
+# CMD ["npm", "run", "start:dev"]
+CMD ["node", "--max-old-space-size=4096", "server.js"]

@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
             max: 50
         },
     }, {
-        tableName: 'tags'
+        tableName: 'tags',
+        timestamps: false
     });
 
     Tags.associate = function(models) {

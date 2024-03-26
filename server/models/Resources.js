@@ -6,6 +6,12 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             allowNull: false
         },
+        title: {
+            type: DataTypes.STRING(80),
+        },
+        slug: {
+            type: DataTypes.STRING(80),
+        },
         url: {
             type: DataTypes.STRING,
         },

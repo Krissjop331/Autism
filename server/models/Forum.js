@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         Forum.belongsTo(models.Topics, { foreignKey: "topics_id" });
         Forum.hasMany(models.FeaturedForum, { foreignKey: 'featured_forum_id' })
         Forum.belongsTo(models.Tags, { foreignKey: "tags_id" });
+        Forum.belongsTo(models.User, { foreignKey: "author_id" })
     }
 
     return Forum;

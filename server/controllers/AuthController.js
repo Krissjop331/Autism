@@ -10,6 +10,7 @@ const CustomError = require('../Errors/errors');
 const db = require("../models/index");
 const User = db.User;
 const Role = db.Role;
+
 const DoctorUser = db.DoctorUser;
 const ParentsUsers = db.ParentsUsers;
 
@@ -114,8 +115,6 @@ class AuthController {
                         password: hashPassword,
                         is_active: false,
                         status: req.body.status || "loading",
-                        likes: 0,
-                        dislikes: 0,
                         blocked: req.body.blocked || false,
                         createdAt: new Date(),
                         updatedAt: new Date(),
@@ -160,8 +159,6 @@ class AuthController {
                         password: hashPassword,
                         is_active: false,
                         status: 'loading',
-                        likes: 0,
-                        dislikes: 0,
                         blocked: false,
                         createdAt: new Date(),
                         updatedAt: new Date(),
@@ -244,7 +241,11 @@ class AuthController {
             delete req.body.username;
             delete req.body.password;
 
-            return res.status(201).json({ message: "Вы авторизированы", status: 201, token: req.headers.authorization, user });
+            // const likes = await Likes.findAll({where: {liked_user_id: user.id, status: true}});
+            // const dislikes = await Dislikes.findAll({where: {disliked_user_id: user.id, status: true}});
+
+            return res.status(201).json({ message: "Вы авторизированы", status: 201, token: req.headers.authorization, user});
+            // return res.status(201).json({ message: "Вы авторизированы", status: 201, token: req.headers.authorization, user, user_likes: likes.count || 0, user_dislikes: dislikes.count || 0 });
         } catch (error) {
             console.error("Ошибка на сервере", error);
             return CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);

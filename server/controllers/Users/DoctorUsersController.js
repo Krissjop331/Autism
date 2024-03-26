@@ -1,12 +1,3 @@
-const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
-const config = require('../../config/config.json');
-const secret = config.secretKey || 'JWTKEY';
-const cookie = require("cookie-parser");
-const moment = require('moment');
-const { Op } = require('sequelize');
-
 
 const CustomError = require('../../Errors/errors');
 const db = require("../../models/index");

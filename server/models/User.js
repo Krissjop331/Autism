@@ -57,14 +57,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
-        dislikes: {
-            type: DataTypes.INTEGER,
-            defaultValue: 0
-        },
         blocked: {
             type: DataTypes.BOOLEAN,
             defaultValue: false
-        }
+        },
+        // likes: {
+        //     type: DataTypes.INTEGER,
+        //     defaultValue: 0
+        // },
+        // dislikes: {
+        //     type: DataTypes.INTEGER,
+        //     defaultValue: 0
+        // }
     }, {
         tableName: 'users'
     });
@@ -101,9 +105,17 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.HistoryVisit, { foreignKey: 'history_id' }); 
 
         // FORUM
-        User.hasMany(models.Topics, { foreignKey: 'user_id' }); 
-        User.hasMany(models.CommentTopics, { foreignKey: 'comment_topics_id' }); 
-        User.hasMany(models.FeaturedForum, {foreignKey: 'featured_forum_id'});
+        User.hasMany(models.Topics, { foreignKey: 'author_id' }); 
+        User.hasMany(models.CommentTopics, { foreignKey: 'author_id' }); 
+        User.hasMany(models.FeaturedForum, {foreignKey: 'user_id'});
+        User.hasMany(models.Forum, {foreignKey: 'author_id'});
+
+
+        // LIKES AND DISLIKES USER
+        // User.belongsTo(models.Likes, { as: 'likedByUserAssociation', foreignKey: 'liked_by_user' }); 
+
+        // User.hasMany(models.Dislikes, { as: 'user_id', foreignKey: 'dislikes_id' }); 
+        // User.hasMany(models.Dislikes, { as: 'dislikes_user_id', foreignKey: 'dislike_id' }); 
     }
 
     return User;

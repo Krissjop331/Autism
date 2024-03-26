@@ -6,10 +6,10 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             allowNull: false
         },
-        type: {
-            type: DataTypes.STRING(50),
-            max: 50
-        },
+        // type: {
+        //     type: DataTypes.STRING(50),
+        //     max: 50
+        // },
         module: {
             type: DataTypes.STRING(50),
             max: 50,
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         }
         
     }, {
-        tableName: 'resources_type',
+        tableName: 'resources_module',
         timestamps: false
     });
 

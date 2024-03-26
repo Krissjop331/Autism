@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
         }
     }, {
-        tableName: 'comment_t_many'
+        tableName: 'comment_t_many',
+        timestamps: false
     });
 
     return CommentTMany;

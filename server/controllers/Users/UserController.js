@@ -3,15 +3,13 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require('../../config/config.json');
 const secret = config.secretKey || 'JWTKEY';
-const cookie = require("cookie-parser");
-const moment = require('moment');
 
 const CustomError = require('../../Errors/errors');
 const db = require("../../models/index");
 const User = db.User;
 const Role = db.Role;
-const DoctorUser = db.DoctorUser;
-const ParentsUsers = db.ParentsUsers;
+// const Likes = db.Likes;
+// const Dislikes = db.Dislikes;
 
 
 class UserController {
@@ -29,10 +27,60 @@ class UserController {
                 res.status(201).json({status: 201, message: "Пользователи получены", users: users}) :
                 CustomError.handleNotFound(res, "Пользователей нет", 404);
         } catch (e) {
-            console.error(`Ошибка извеления ролей: ${e.message}`);
+            console.error(`Ошибка получения пользователей: ${e.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
+
+    // async getAll(req, res) {
+    //     try {
+    //         // Получаем всех пользователей с их ролями
+    //         const users = await User.findAll({
+    //             include: [{ model: Role }]
+    //         });
+
+    //         // Для каждого пользователя получаем количество активных и неактивных лайков
+    //         for (const user of users) {
+    //             const [activeLikesCount, inactiveLikesCount] = await Promise.all([
+    //                 Likes.count({ 
+    //                     where: { 
+    //                         liked_user_id: user.id, // ID пользователя, которому ставят лайки
+    //                         status: true // Только активные лайки
+    //                     }
+    //                 }),
+    //                 Likes.count({ 
+    //                     where: { 
+    //                         liked_user_id: user.id, // ID пользователя, которому ставят лайки
+    //                         status: false // Только неактивные лайки
+    //                     }
+    //                 })
+    //             ]);
+                
+    //             user.dataValues.active_likes_count = activeLikesCount; // Количество активных лайков
+    //             user.dataValues.inactive_likes_count = inactiveLikesCount; // Количество неактивных лайков
+
+    //             // Проверяем, если количество активных лайков больше 0 и количество неактивных лайков тоже больше 0,
+    //             // то меняем статус последнего неактивного лайка на активный
+    //             if (activeLikesCount > 0 && inactiveLikesCount > 0) {
+    //                 const lastInactiveLike = await Likes.findOne({
+    //                     where: {
+    //                         liked_user_id: user.id,
+    //                         status: false // Находим последний неактивный лайк
+    //                     },
+    //                     order: [['createdAt', 'DESC']] // Сортируем по дате создания в обратном порядке
+    //                 });
+    //                 lastInactiveLike.status = true; // Меняем статус на активный
+    //                 await lastInactiveLike.save(); // Сохраняем изменения
+    //             }
+    //         }
+
+    //         return res.status(200).json({ status: 200, message: "Пользователи получены", users: users });
+    //     } catch (error) {
+    //         console.error(`Ошибка извлечения ролей: ${error.message}`);
+    //         return res.status(500).json({ status: 500, message: "Ошибка на сервере" });
+    //     }
+    // }
+    
 
     async getId(req, res) {
         try{
@@ -45,22 +93,21 @@ class UserController {
 
             return res.status(200).json({message: "Пользователь найден", users: user, status: 200});
         } catch (e) {
-            console.error(`Ошибка извеления ролей: ${e.message}`);
+            console.error(`Ошибка получения пользователя: ${e.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
 
     async update(req, res) {
         try {
-            const {id} = req.params || req.body || req.query;
             if(!req.body) {
                 return CustomError.handleNotFound(res, "Данных нет", 400);
             }
 
-                
+            if(!req.headers.authorization) return res.status(403).json({message: "Некорректно передан токен либо не передан"})
             const authToken = req.headers.authorization.split(' ')[1];
-            const token = jwt.verify(authToken, secret);
-            const userVerify = await User.findOne({where: {id: token.id}})
+            let { id } = jwt.verify(authToken, secret);
+            const userVerify = await User.findOne({where: {id: id}})
 
             const user = await User.findOne({where: {id}, include: [{model: Role}]});
             if(!user) {
@@ -70,22 +117,22 @@ class UserController {
                 return res.status(403).json({message: "Вы не являетесь этим пользователем", status: 403})
             }
 
-            user.login = req.body.login || user.login;
-            user.email = req.body.email || user.email;
-            user.phone_number = req.body.phone || user.phone_number;
+            user.login = req.body.login || req.params.login || user.login;
+            user.email = req.body.email || req.params.email || user.email;
+            user.phone_number = req.body.phone || req.params.phone || req.params.phone_number || req.body.phone_number || user.phone_number;
             await user.save();
 
             if(req.body.password) {
-                user.password = bcrypt.hashSync(req.body.password, 8);
+                user.password = bcrypt.hashSync(req.body.password || req.params.password, 8);
                 await user.save();
             } else if(req.file) {
                 user.avatar_url = req.file.path || req.file.image.path || '';
                 await user.save();
             }
 
-            return res.status(200).json({message: "Данные обновлены", user, status: 201})
+            return res.status(200).json({message: "Данные обновлены", user, status: 201, body: req.body});
         } catch (error) {
-            console.error(`Ошибка извеления ролей: ${e.message}`);
+            console.error(`Ошибка обновления: ${error.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
@@ -117,7 +164,7 @@ class UserController {
             user.last_name = req.body.last_name || user.last_name;
             user.email = req.body.email || user.email;
             user.login = req.body.login || user.login;
-            user.avatar_url = req.file?.path || ''; // Добавил проверку на наличие файла в body
+            // user.avatar_url = req.file?.path || ''; // Добавил проверку на наличие файла в body
             user.phone_number = req.body.phone || user.phone_number;
             user.status = req.body.status || user.status;
             user.blocked = req.body.blocked || user.blocked;
@@ -133,8 +180,8 @@ class UserController {
             }
         
             return res.status(200).json({message: "Данные обновлены", user, id: userVerify.i, user_Id: user.id, status: 201})
-        } catch (error) {
-            console.error(`Ошибка извеления ролей: ${e.message}`);
+        } catch (e) {
+            console.error(`Ошибка изменения пользователя адином: ${e.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
@@ -151,54 +198,132 @@ class UserController {
 
             await user.destroy();
             return res.status(200).json({ message: "Пользователь успешно удалена", status: 201 })
-        } catch (error) {
-            console.error(`Ошибка извеления ролей: ${e.message}`);
+        } catch (e) {
+            console.error(`Ошибка удаления пользователя: ${e.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
 
 
-    async addLike(req, res) {
-        const {id} = req.params || req.body;
-        if(!id) return CustomError.handleInvalidData(res, "Не передан id пользователя");
+    // async addLike(req, res) {
+    //     try {
+    //         const authToken = req.headers.authorization.split(' ')[1];
+    //         const token = jwt.verify(authToken, secret);
+    //         const user = await User.findOne({ where: { id: token.id } }); // Получаем пользователя по токену
+    
+    //         const likedUserId = req.params.userId; // Получаем ID пользователя, которому ставят лайк
+    
+    //         const existingLike = await Likes.findOne({
+    //             where: {
+    //                 liked_user_id: likedUserId,
+    //                 user_id: user.id // Проверяем, если пользователь уже ставил лайк данному пользователю
+    //             }
+    //         });
+    
+    //         if (existingLike) {
+    //             return res.status(400).json({ status: 400, message: "Лайк уже был поставлен" });
+    //         }
+    
+    //         await Likes.create({
+    //             liked_user_id: likedUserId,
+    //             user_id: user.id,
+    //             status: true // Устанавливаем статус лайка как активный
+    //         });
+    
+    //         return res.status(200).json({ status: 200, message: "Лайк добавлен успешно" });
+    //     } catch (error) {
+    //         console.error(`Ошибка добавления лайка: ${error.message}`);
+    //         return res.status(500).json({ status: 500, message: "Ошибка на сервере" });
+    //     }
+    // }
+    
+    // async removeLike(req, res) {
+    //     try {
+    //         const authToken = req.headers.authorization.split(' ')[1];
+    //         const token = jwt.verify(authToken, secret);
+    //         const user = await User.findOne({ where: { id: token.id } }); // Получаем пользователя по токену
+    
+    //         const likedUserId = req.params.userId; // Получаем ID пользователя, которому ставят лайк
+    
+    //         const existingLike = await Likes.findOne({
+    //             where: {
+    //                 liked_user_id: likedUserId,
+    //                 user_id: user.id // Проверяем, если пользователь уже ставил лайк данному пользователю
+    //             }
+    //         });
+    
+    //         if (!existingLike) {
+    //             return res.status(404).json({ status: 404, message: "Лайк не найден" });
+    //         }
+    
+    //         await existingLike.destroy(); // Удаляем лайк
+    
+    //         return res.status(200).json({ status: 200, message: "Лайк удален успешно" });
+    //     } catch (error) {
+    //         console.error(`Ошибка удаления лайка: ${error.message}`);
+    //         return res.status(500).json({ status: 500, message: "Ошибка на сервере" });
+    //     }
+    // }
 
-        const user = await User.findByPk(id);
-        if (!user) {
-            return CustomError.handleNotFound(res, "Пользователь не найден", 404);
-        }
-    }
+    // async addDislike(req, res) {
+    //     try {
+    //         const authToken = req.headers.authorization.split(' ')[1];
+    //         const token = jwt.verify(authToken, secret);
+    //         const user = await User.findOne({ where: { id: token.id } }); // Получаем пользователя по токену
+    
+    //         const dislikedUserId = req.params.userId; // Получаем ID пользователя, которому ставят лайк
+    
+    //         const existingDislike = await Dislikes.findOne({
+    //             where: {
+    //                 disliked_user_id: dislikedUserId,
+    //                 user_id: user.id // Проверяем, если пользователь уже ставил лайк данному пользователю
+    //             }
+    //         });
+    
+    //         if (existingDislike) {
+    //             return res.status(400).json({ status: 400, message: "Лайк уже был поставлен" });
+    //         }
+    
+    //         await Dislikes.create({
+    //             disliked_user_id: dislikedUserId,
+    //             user_id: user.id,
+    //             status: true // Устанавливаем статус лайка как активный
+    //         });
+    
+    //         return res.status(200).json({ status: 200, message: "Дизлайк добавлен успешно", user });
+    //     } catch (error) {
+    //         console.error(`Ошибка добавления лайка: ${error.message}`);
+    //         return res.status(500).json({ status: 500, message: "Ошибка на сервере" });
+    //     }
+    // }
 
-    async removeLike(req, res) {
-        const {id} = req.params || req.body;
-        if(!id) return CustomError.handleInvalidData(res, "Не передан id пользователя");
-
-        const user = await User.findByPk(id);
-        if (!user) {
-            return CustomError.handleNotFound(res, "Пользователь не найден", 404);
-        }
-    }
-
-    async addDislike(req, res) {
-        const {id} = req.params || req.body;
-        if(!id) return CustomError.handleInvalidData(res, "Не передан id пользователя");
-
-        const user = await User.findByPk(id);
-        if (!user) {
-            return CustomError.handleNotFound(res, "Пользователь не найден", 404);
-        }
-    }
-
-    async removeDislike(req, res) {
-        const {id} = req.params || req.body;
-        if(!id) return CustomError.handleInvalidData(res, "Не передан id пользователя");
-
-        const user = await User.findByPk(id);
-        if (!user) {
-            return CustomError.handleNotFound(res, "Пользователь не найден", 404);
-        }
-
-        user.dislikes = user.dislikes--
-    }
+    // async removeDislike(req, res) {
+    //     try {
+    //         const authToken = req.headers.authorization.split(' ')[1];
+    //         const token = jwt.verify(authToken, secret);
+    //         const user = await User.findOne({ where: { id: token.id } }); // Получаем пользователя по токену
+    
+    //         const dislikedUserId = req.params.userId; // Получаем ID пользователя, которому ставят лайк
+    
+    //         const existingDislike = await Dislikes.findOne({
+    //             where: {
+    //                 disliked_user_id: dislikedUserId,
+    //                 user_id: user.id // Проверяем, если пользователь уже ставил лайк данному пользователю
+    //             }
+    //         });
+    
+    //         if (!existingDislike) {
+    //             return res.status(404).json({ status: 404, message: "Дизлайк не найден" });
+    //         }
+    
+    //         await existingDislike.destroy(); // Удаляем лайк
+    
+    //         return res.status(200).json({ status: 200, message: "Дизлайк удален успешно", user });
+    //     } catch (error) {
+    //         console.error(`Ошибка удаления лайка: ${error.message}`);
+    //         return res.status(500).json({ status: 500, message: "Ошибка на сервере" });
+    //     }
+    // }
 
 }
 
