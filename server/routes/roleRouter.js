@@ -5,7 +5,6 @@ const multer = require('multer');
 const uploads = multer();
 
 const RoleController = require('../controllers/RoleController.js');
-// const {authMiddleware} = require("../middleware/index.js");
 const checkRolesMiddleware = require("../middleware/checkRolesMiddleware.js");
 const authMiddleware = require("../middleware/authMiddleware.js");
 

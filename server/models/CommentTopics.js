@@ -10,11 +10,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
         },
         likes: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         },
         dislikes: {
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            defaultValue: 0
         },
+        file_path: {
+            type: DataTypes.STRING
+        }
     }, {
         tableName: 'comment_topics'
     });

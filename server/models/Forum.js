@@ -26,9 +26,9 @@ module.exports = (sequelize, DataTypes) => {
         looked: {
             type: DataTypes.INTEGER
         },
-        status: {
-            type: DataTypes.STRING
-        }
+        // status: {
+        //     type: DataTypes.STRING
+        // }
     }, {
         tableName: 'forum'
     });

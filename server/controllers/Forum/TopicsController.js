@@ -148,6 +148,80 @@ class TopicsController {
         return res.status(200).json({message: "Тема удалена", status: 201});
     }
 
+    
+    // COMMENT
+    async getAllComment(req, res) {
+        const {id} = req.params || req.body;
+        let where = id ? {topics_id: id} : {};
+        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные некорректны");
+
+        const commentTopics = await CommentTMany.findAll({where, include: [{model: User,}, {model: CommentTopics}]});
+        if(!commentTopics || commentTopics <= 0) return CustomError.handleNotFound(res, "Комментарии не найдены");
+        
+        return res.status(200).json({message: "Комментарии получены", commentTopics, status: 201});
+    }
+
+    async getOneComment(req, res) {
+        const {id, comment_id} = req.params || req.body;
+        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные некорректны");
+
+        const commentTopics = await CommentTMany.findOne({where: {topics_id: id, comment_id}, include: [{model: User,}, {model: CommentTopics}]});
+        if(!commentTopics) return CustomError.handleNotFound(res, "Комментарии не найдены");
+
+        return res.status(200).json({message: "Комментарий получен", commentTopics, status: 201})
+    }
+
+    async createComment(req, res) {
+        const {id, content, file_path} = req.params || req.body;
+        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные некорректны");
+        
+        let user;
+        let token;
+        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
+        if (req.headers.authorization) {
+            token = req.headers.authorization.split(' ')[1];
+            const { id } = jwt.verify(token, secret);
+            user = await User.findOne({where: {id: id}, include: [{model: Role}]});
+            if(!user) return CustomError.handleNotFound(res, "Пользователь не найден");
+        } else {
+            return res.status(403).json({message: "Вы не авторизованы"});
+        }
+        const commentTopicsAll = await CommentTopics.findAll();
+
+        let commentTopics = await CommentTopics.create({
+            content: content,
+            file_path: file_path || '',
+            likes: 0,
+            dislikes: 0,
+            author_id: user.id
+        })
+        if(commentTopics) return res.status(403).json({message: "Не удалось создать комментарий", commentTopics});
+
+        commentTopics = await CommentTMany.create({
+            comment_topics_id: commentTopicsAll.length++,
+            topics_id: id
+        })
+
+        commentTopics = await CommentTMany.findByPk(commentTopics.id, {
+            include: [{model: Topics}, {model: CommentTopics}]
+        })
+        if(commentTopics) return res.status(403).json({message: "Не удалось создать комментарий", commentTopics});
+
+        return res.status(200).json({message: "Комментарий создан", commentTopics});
+    }
+
+
+    async deleteComment(req, res) {
+        const {id, comment_id} = req.params || req.body;
+        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные некорректны");
+        
+        let commentTopics = await CommentTopics.findOne({where: {comment_id}});
+        if(!commentTopics) return CustomError.handleNotFound(res, "Комментарий не найден");
+        commentTopics = await CommentTMany.findOne({where: {topics_id: id, comment_topics_id: comment_id}});
+        await commentTopics.destroy();
+
+        return res.status(200).json({message: "Комментарий удален", status: 201});
+    }
 }
 
 module.exports = new TopicsController();
