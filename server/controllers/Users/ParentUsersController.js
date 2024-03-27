@@ -81,23 +81,23 @@ class ParentUsersController {
             const parent = await User.findOne({ where: { id: parent_id }, include: [{ model: Role }] });
             const child = await User.findOne({ where: { id: user_id }, include: [{ model: Role }] });
             if (!parent || !child) {
-                return CustomError.handleNotFound(res, "Пользователь или доктор не найден");
+                return CustomError.handleNotFound(res, "Пользователь не найден");
             }
 
             const parentRole = parent.Role.name;
-            if (parentRole !== 'parent') {
-                return CustomError.handleInvalidData(res, "Пользователь не является доктором");
+            if (parentRole !== 'parents') {
+                return CustomError.handleInvalidData(res, "Пользователь не является родителем");
             }
             const parentUser = await ParentsUsers.create({
                 child_id: user_id,
                 parent_id,
-                specialization: req.body.specialization || null
+                parent: req.body.parent || 'mother'
             });
             if (!parentUser) {
-                return res.status(500).json({ message: "Ошибка добавления доктора к ребенку" });
+                return res.status(500).json({ message: "Ошибка добавления родителя к ребенку" });
             }
 
-            return res.status(201).json({ message: "Доктор успешно добавлен к ребенку", status: 200, parentUser, parent, child });
+            return res.status(201).json({ message: "Родитель успешно добавлен к ребенку", status: 200, parentUser, parent, child });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Произошла ошибка", error: error.message });
@@ -106,7 +106,7 @@ class ParentUsersController {
 
     async update(req, res) {
         try {
-            const { user_id, parent_id, specialization } = req.body;
+            const { user_id, parent_id, parent } = req.body;
             if (!user_id || !parent_id) {
                 return CustomError.handleInvalidData(res, "Не переданы все необходимые данные");
             }
@@ -114,7 +114,7 @@ class ParentUsersController {
             let parentUser = await ParentsUsers.findOne({
                 where: {
                     child_id: user_id,
-                    parent_id: parent_id
+                    parent_id: parent_id,
                 }
             });
 
@@ -126,7 +126,7 @@ class ParentUsersController {
                 parentUser = await ParentsUsers.create({
                     child_id: user_id,
                     parent_id: parent_id,
-                    specialization: specialization || null
+                    parent: parent || null
                 });
     
                 return res.status(201).json({ message: "Ребенок успешно добавлен к доктору", parentUser });

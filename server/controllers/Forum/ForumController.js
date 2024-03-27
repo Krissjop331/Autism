@@ -19,7 +19,7 @@ class ForumController {
 
     async getAll(req, res) {
         try {
-            const { title, slug, authorId, sortBy, sortOrder } = req.query;
+            const { title, slug, authorId, sortBy, sortOrder, tagsId } = req.query;
 
             let where = {};
             if (title) {
@@ -30,6 +30,9 @@ class ForumController {
             }
             if (authorId) {
                 where.author_id = authorId;
+            }
+            if(tagsId) {
+                where.tags_id = tagsId
             }
 
             let order = [['createdAt', 'ASC']];
@@ -125,7 +128,9 @@ class ForumController {
         return res.status(200).json({message: "Форум удален", status: 201});
     }
 
-    async featured(req, res) {
+// FEATURED
+
+    async getFeatured(req, res) {
         let user;
         let token;
         if (req.headers.authorization) {

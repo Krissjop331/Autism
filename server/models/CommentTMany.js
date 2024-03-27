@@ -14,5 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: false
     });
 
+    CommentTMany.associate = function(models) {
+        CommentTMany.belongsTo(models.Topics, { foreignKey: 'topics_id' });
+        CommentTMany.belongsTo(models.CommentTopics, { foreignKey: 'comment_topics_id' });
+    }
+
     return CommentTMany;
 };

@@ -1,9 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
     const ParentsUsers = sequelize.define("ParentsUsers", {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true
+        parent: {
+            type: DataTypes.STRING(50)
         }
     }, {
         timestamps: false,

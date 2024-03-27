@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 0
         },
-        file_path: {
+        file_patch: {
             type: DataTypes.STRING
         }
     }, {

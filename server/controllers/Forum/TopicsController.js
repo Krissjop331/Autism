@@ -13,6 +13,7 @@ const Topics = db.Topics;
 const CommentTopics = db.CommentTopics;
 const CommentTMany = db.CommentTMany;
 const Role = db.Role;
+const Forum = db.Forum;
 
 
 class TopicsController {
@@ -46,7 +47,7 @@ class TopicsController {
             const topics = await Topics.findAll({
                 where: where,
                 order: order,
-                include: [{model: User}]
+                include: [{model: User}, {model: Forum}]
             });
 
             for (const topic of topics) {
@@ -77,7 +78,7 @@ class TopicsController {
     }
 
     async create(req, res) {
-        const {title, description} = req.body || req.params;
+        const {id, title, description} = req.body || req.params;
         if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
         let user;
         let token;
@@ -89,18 +90,21 @@ class TopicsController {
         } else {
             return res.status(403).json({message: "Вы не авторизованы"});
         }
+        const forum = await Forum.findByPk(id);
+        if(!forum) return CustomError.handleNotFound(res, "Форум не найден");
 
         const topics = await Topics.create({
             title,
             slug: title.replace(/\s+/g, '-').toLowerCase(),
             description,
             author_id: user.id,
-            status: "success",
+            status: "open",
             looked: 0,
             likes: 0,
             dislikes: 0,
             createdAt: new Date(),
             updatedAt: new Date(),
+            forum_id: forum.id
         })
         if(!topics) return res.status(500).json({message:"Не удалось создать тему", status: 500, topics})
 
@@ -108,7 +112,7 @@ class TopicsController {
     }
 
     async update(req, res) {
-        const {id, title, description, date, looked} = req.params || req.body;
+        const {id, topics_id, title, description, date, looked, status} = req.params || req.body;
         let user;
         let token;
         if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
@@ -120,14 +124,18 @@ class TopicsController {
         } else {
             return res.status(403).json({message: "Вы не авторизованы"});
         }
-        let topics = await Topics.findOne({where: {id: id, author_id: user.id}, include: [{model: User}]});
+        let topics = await Topics.findOne({where: {id: topics_id, author_id: user.id}, include: [{model: User}]});
         if(!topics) return res.status(403).json({message: "Вы не являетесь автором данной статьи"});
+        let forum = await Forum.findByPk(id);
+        if(!forum) return res.status(403).json({message: "Форум не найден"});
 
         topics.title = title || topics.title;
         topics.slug = title.replace(/\s+/g, '-').toLowerCase() || topics.slug;
         topics.description = description || topics.description;
         topics.updatedAt = date || topics.updatedAt;
         topics.looked = looked == true ? topics.looked++ : topics.looked
+        topics.forum_id = forum.id || topics.forum_id;
+        topics.status = status || topics.status
         await topics.save();
 
         return res.status(200).json({message: "Тема успешно обновлена", topics, status: 201});
@@ -172,12 +180,11 @@ class TopicsController {
     }
 
     async createComment(req, res) {
-        const {id, content, file_path} = req.params || req.body;
-        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные некорректны");
-        
+        const {id} = req.params;
+        if(!req.params) return CustomError.handleBadRequest(res, "Данные некорректны");
+        console.log(req.params.id);
         let user;
         let token;
-        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
         if (req.headers.authorization) {
             token = req.headers.authorization.split(' ')[1];
             const { id } = jwt.verify(token, secret);
@@ -189,25 +196,25 @@ class TopicsController {
         const commentTopicsAll = await CommentTopics.findAll();
 
         let commentTopics = await CommentTopics.create({
-            content: content,
-            file_path: file_path || '',
+            content: req.body.content,
+            file_patch: req.body.file_patch || '',
             likes: 0,
             dislikes: 0,
             author_id: user.id
         })
-        if(commentTopics) return res.status(403).json({message: "Не удалось создать комментарий", commentTopics});
+        if(commentTopics == null || commentTopics == undefined || commentTopics == []) return res.status(403).json({message: "Не удалось создать комментарий", commentTopics});
 
-        commentTopics = await CommentTMany.create({
+        let commentTMany = await CommentTMany.create({
             comment_topics_id: commentTopicsAll.length++,
-            topics_id: id
-        })
+            topics_id: id,
+            status: 1})
+        commentTMany = await CommentTMany.findOne({where: {id: commentTMany.id},  include: [{model: Topics}, {model: CommentTopics}]})
+        const checkCommentDublicate = await CommentTMany.findOne({where: {topics_id: id, comment_topics_id: commentTopicsAll.length++}})
+        const status = commentTMany.Topic.status;
+        if(checkCommentDublicate) return res.status(403).json({message: "Не удалось создать комментарий", checkCommentDublicate});
+        if(status === 'close' || status != 'open') return res.status(403).json({message: "Эта тема уже закрыта. Вы не можете добавлять комментарии"});
 
-        commentTopics = await CommentTMany.findByPk(commentTopics.id, {
-            include: [{model: Topics}, {model: CommentTopics}]
-        })
-        if(commentTopics) return res.status(403).json({message: "Не удалось создать комментарий", commentTopics});
-
-        return res.status(200).json({message: "Комментарий создан", commentTopics});
+        return res.status(200).json({message: "Комментарий создан", commentTMany});
     }
 
 

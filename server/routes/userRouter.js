@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const uploads = multer();
-a
+
 const UserController = require("../controllers/Users/UserController.js");
 const checkRolesMiddleware = require("../middleware/checkRolesMiddleware.js");
 const authMiddleware = require("../middleware/authMiddleware.js");
