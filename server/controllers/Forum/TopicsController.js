@@ -82,8 +82,8 @@ class TopicsController {
         }
 
         const {id} = req.params
-        const {title, description} = req.body ;
-        if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
+        const {title, description} = req.body;
+        if(!req.params || !req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
         let user;
         let token;
         if (req.headers.authorization) {
@@ -193,10 +193,8 @@ class TopicsController {
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
         const {id} = req.params;
         if(!req.params) return CustomError.handleBadRequest(res, "Данные некорректны");
-        console.log(req.params.id);
         let user;
         let token;
         if (req.headers.authorization) {
@@ -207,11 +205,11 @@ class TopicsController {
         } else {
             return res.status(403).json({message: "Вы не авторизованы"});
         }
-        const commentTopicsAll = await CommentTopics.findAll();
 
+        const commentTopicsAll = await CommentTopics.findAll();
         let commentTopics = await CommentTopics.create({
             content: req.body.content,
-            file_patch: req.body.file || req.file || '',
+            file_patch: req.body.file || req.files || '',
             likes: 0,
             dislikes: 0,
             author_id: user.id
@@ -219,7 +217,7 @@ class TopicsController {
         if(commentTopics == null || commentTopics == undefined || commentTopics == []) return res.status(403).json({message: "Не удалось создать комментарий", commentTopics});
 
         let commentTMany = await CommentTMany.create({
-            comment_topics_id: commentTopicsAll.length++,
+            comment_topics_id: commentTopics.id,
             topics_id: id,
             status: 1})
         commentTMany = await CommentTMany.findOne({where: {id: commentTMany.id},  include: [{model: Topics}, {model: CommentTopics}]})

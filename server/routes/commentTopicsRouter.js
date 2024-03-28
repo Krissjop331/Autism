@@ -20,18 +20,6 @@ router.post('/:id/comments/create/', [
     body('content')
         .isLength({min: 3}).withMessage('Текст не может быть меньше 3 символов')
         .notEmpty().withMessage('Это поле обязательно'),
-    body('file')
-        .custom((value, { req }) => {
-            if (!req.files || !req.files.file) {
-                throw new Error('Файл не был загружен');
-            }
-            const file = req.files.image;
-            // Проверка типа файла
-            if (!file.mimetype.startsWith('file')) {
-                throw new Error('Должен быть файл');
-            }
-            return true;
-    })
 ], authMiddleware, middlewareImage, TopicsController.createComment);
 router.delete('/:id/comments/delete/:comment_id', authMiddleware , checkRolesMiddleware(["admin"]), TopicsController.deleteComment);
 

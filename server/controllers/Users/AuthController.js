@@ -1,13 +1,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
-const config = require('../config/config.json');
+const config = require('../../config/config.json');
 const secret = config.secretKey || 'JWTKEY';
 const cookie = require("cookie-parser");
 const moment = require('moment');
 
-const CustomError = require('../Errors/errors');
-const db = require("../models/index");
+const CustomError = require('../../Errors/errors');
+const db = require("../../models/index");
 const User = db.User;
 const Role = db.Role;
 
@@ -39,7 +39,7 @@ class AuthController {
                     if (!err) {
                         const user = await User.findOne({id: decoded.id});
                         const newToken = generateToken(user.id, user.role_id);
-                        res.json({ token: newToken });
+                        res.json({ token: `Bearer ${newToken}` });
                     } else {
                         // Ошибка верификации токена
                         return res.status(401).json({ message: "Invalid token", status: 401 });
@@ -57,18 +57,15 @@ class AuthController {
     async signUp(req, res) {
         try {
             const authToken = req.headers.authorization.split(" ")[1] || '';
-
             if (!req.body) {
-                return CustomError.handleNotFound(res, "Данных нет", 400); // Изменено на статус 400
+                return CustomError.handleNotFound(res, "Вы не авторизованы", 400);
             }
-
             const errors = validationResult(req);
             if(!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
-
             if(authToken !== '' || authToken != undefined) {
-                const { id, roles } = jwt.verify(authToken, secret);
+                const { id } = jwt.verify(authToken, secret);
                 const user = await User.findOne({
                     where: {id: id},
                     include: [{
@@ -77,39 +74,33 @@ class AuthController {
 
                 const users = await User.findAll();
                 const userLength = users.length + 1;
-    
                 const userEmail = await User.findOne({where: { email: req.body.email }});
                 const userLogin = await User.findOne({where: { login: req.body.login }});
                 if (userEmail) {
                     delete req.body.email;
                     delete req.body.password;
                     delete req.body.login;
-    
                     return CustomError.handleDuplicateResource(res, "Данный пользователь c таким email уже существует", 409);
                 }
                 if (userLogin) {
                     delete req.body.email;
                     delete req.body.password;
                     delete req.body.login;
-    
                     return CustomError.handleDuplicateResource(res, "Данный пользователь c таким логином уже существует", 409);
                 }
-    
-            
+
+                let userCreate;
                 const hashPassword = bcrypt.hashSync(req.body.password, 8);
                 const role = await Role.findOne({name: "unknow"});
                 const token = generateToken(userLength, role.name || "unknow");
                 req.headers.authorization = "Bearer" + " " + token;
                 res.cookie('authorization', "Bearer" + ' ' + token, { expires: new Date(Date.now() + 60 + 60 + 1000) });
-    
-
-                let userCreate;
                 if(user.Role.name === "admin") {
                     userCreate = await User.create({
                         first_name: req.body.first_name,
                         last_name: req.body.last_name,
                         email: req.body.email,
-                        avatar_url: "",
+                        avatar_url: req.file || "",
                         birthday: req.body.birthday,
                         phone_number: req.body.phone_number || undefined,
                         password: hashPassword,
@@ -131,7 +122,7 @@ class AuthController {
                             if (duplicateDoctor) {
                                 return CustomError.handleDuplicateResource(res, "Данный доктор уже привязан к этому пользователю", 409);
                             }
-                            doctor = await DoctorUser.create({ doctor_id: doctorId, child_id: userLength });
+                            doctor = await DoctorUser.create({ doctor_id: doctorId, child_id: userLength, specialization: req.body.specialization || "Doctor" });
                         } else if (checkdoctor) {
                             return res.status(409).json({ message: "Данный пользователь не является доктором", status: 409 });
                         } else {
@@ -165,8 +156,6 @@ class AuthController {
                         role_id: role.id || 1 || undefined
                     })
                 } 
-                
-                
                 if(!userCreate) {
                     return res.status(400).json({status: 400, message: "Пользователя не удалось создать"})
                 }
@@ -179,7 +168,7 @@ class AuthController {
                 delete req.body.phone_number;
                 delete req.body.birthday;
 
-                return res.status(200).json({status: 201, message: "Пользователь успешно создан", users: userCreate, user, role: user.Role, token: req.headers.authorization})
+                return res.status(200).json({status: 201, message: "Пользователь успешно создан", users: userCreate, token: req.headers.authorization})
             } else {
                 return res.status(403).json({ message: "Вы не авторизованы", status: 403});
             }
@@ -192,15 +181,19 @@ class AuthController {
     async signIn(req, res) {
         try {
             if (!req.body) {
-                return CustomError.handleNotFound(res, "Данных нет", 400); // Изменено на статус 400
+                return CustomError.handleNotFound(res, "Данных нет", 400);
             }
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
 
+            let where = {};
+            if(req.body.login) where.login = req.body.login
+            if(req.body.email) where.email = req.body.email
             const user = await User.findOne({
-                where: {email: req.body.email},
+                // where: {email: req.body.email},
+                where,
                 include: [{
                     model: Role
                 }]
@@ -208,7 +201,6 @@ class AuthController {
             if(!user) {
                 delete req.body.email;
                 delete req.body.password;
-
                 return res.status(404).json({ message: `Пользователя не существует`, status: 404 });
             }
 
@@ -216,24 +208,21 @@ class AuthController {
             if (!validPassword) {
                 delete req.body.email;
                 delete req.body.password;
-
                 return res.status(409).json({ message: "Неправильный пароль", status: 409 });
             }
 
             if(user.blocked && user.blocked === true) {
                 delete req.body.email;
                 delete req.body.password;
-
                 return CustomError.handleBlockedResource(res, "Вы заблокированы. Доступ запрещен", 403)
             }
             if(user.status == "loading" || user.status == "false") {
                 delete req.body.email;
                 delete req.body.password;
-
                 return CustomError.handleBlockedResource(res, "Вы не зарегестрированы", 403)
             }
-            const role = await Role.findOne({where: {id: user.role_id}});
 
+            const role = await Role.findOne({where: {id: user.role_id}});
             const token = generateToken(user.id, role.name);
             req.headers.authorization = "Bearer" + " " + token;
             res.cookie('authorization', "Bearer" + ' ' + token, { expires: new Date(Date.now() + 60 + 60 + 1000) });
@@ -241,11 +230,7 @@ class AuthController {
             delete req.body.username;
             delete req.body.password;
 
-            // const likes = await Likes.findAll({where: {liked_user_id: user.id, status: true}});
-            // const dislikes = await Dislikes.findAll({where: {disliked_user_id: user.id, status: true}});
-
             return res.status(201).json({ message: "Вы авторизированы", status: 201, token: req.headers.authorization, user});
-            // return res.status(201).json({ message: "Вы авторизированы", status: 201, token: req.headers.authorization, user, user_likes: likes.count || 0, user_dislikes: dislikes.count || 0 });
         } catch (error) {
             console.error("Ошибка на сервере", error);
             return CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
@@ -255,14 +240,12 @@ class AuthController {
     async signOut(req, res) {
         try {
             let token;
-
             if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
                 token = req.headers.authorization.split(' ')[1];
             }
             else if (req.cookies && req.cookies.authorization) {
                 token = req.cookies.authorization.split(' ')[1];
             }
-    
             if (token) {
                 res.clearCookie('authorization');
                 res.setHeader('Authorization', '');
@@ -349,7 +332,7 @@ class AuthController {
             if (!user) {
                 return res.status(404).json({ message: "Пользователь не найден", status: 404 });
             }
-            user.is_active = req.query.is_active || false;
+            user.is_active = req.query.is_active || req.params.is_active || false;
             await user.save();
 
             return res.status(200).json({message: "Данные изменены", user, status: 200});

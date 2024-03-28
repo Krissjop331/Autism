@@ -17,12 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         description: {
             type: DataTypes.TEXT
         },
-        likes: {
-            type: DataTypes.INTEGER
-        },
-        dislikes: {
-            type: DataTypes.INTEGER
-        },
+        // likes: {
+        //     type: DataTypes.INTEGER
+        // },
+        // dislikes: {
+        //     type: DataTypes.INTEGER
+        // },
         looked: {
             type: DataTypes.INTEGER
         },
@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
         Forum.hasMany(models.FeaturedForum, { foreignKey: 'featured_forum_id' })
         Forum.belongsTo(models.Tags, { foreignKey: "tags_id" });
         Forum.belongsTo(models.User, { foreignKey: "author_id" })
+
+        // LIKES AND DISLIKES
+        Forum.hasMany(models.LikesForum, { foreignKey: "forum_id" });
+        Forum.hasMany(models.DislikesForum, { foreignKey: "forum_id" });
     }
 
     return Forum;

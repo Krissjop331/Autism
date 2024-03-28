@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         Topics.belongsTo(models.User, { foreignKey: "author_id" });
         // Topics.belongsTo(models.CommentTopics, { foreignKey: "comment_id" });
         Topics.belongsToMany(models.CommentTMany, {  as: 'topics', foreignKey: 'topics_id', through: 'CommentTMany', onDelete: 'CASCADE'  }); 
+
+        // LIKES
+        Topics.hasMany(models.LikesTopics, { foreignKey: "topics_id" });
+        Topics.hasMany(models.DislikesTopics, { foreignKey: "topics_id" });
     }
 
     return Topics;

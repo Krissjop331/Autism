@@ -24,7 +24,7 @@ app.use((err, req, res, next) => {
 app.use('/', ApiRouter);
 
 const start = async() => {
-    db.sequelize.sync({ alter: true });
+    // db.sequelize.sync({ force: true });
 
     app.listen(PORT, () => {
         console.log(`Running at localhost:${PORT}`);

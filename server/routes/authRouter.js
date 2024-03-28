@@ -4,7 +4,7 @@
     const uploads = multer();
     const { body, validationResult } = require('express-validator');
 
-    const AuthController = require("../controllers/AuthController.js");
+    const AuthController = require("../controllers/Users/AuthController.js");
     const checkRolesMiddleware = require("../middleware/checkRolesMiddleware.js");
     const authMiddleware = require("../middleware/authMiddleware.js");
 
@@ -49,7 +49,6 @@
     // Активен пользователь, указывается в параметрах состояние true или false
     // id берется из токена
     router.put('/isactive/', authMiddleware, uploads.none(), AuthController.isActiveUser);
-    // router.put('/isactive/:id', uploads.none(), AuthController.isActiveUser);
     // ИЗменяем роль пользователю. Передается через параметры или body
     router.put('/role_update/:id', authMiddleware, checkRolesMiddleware(["admin"]), uploads.none(), AuthController.userRoleUpdate);
 

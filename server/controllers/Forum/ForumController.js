@@ -7,9 +7,12 @@ const CustomError = require('../../Errors/errors');
 const db = require("../../models/index");
 const User = db.User;
 const Forum = db.Forum;
+const Role = db.Role;
 const FeaturedForum = db.FeaturedForum;
 const Topics = db.Topics;
 const Tags = db.Tags;
+const Likes = db.LikesForum;
+const Dislikes = db.DislikesForum;
 
 
 class ForumController {
@@ -73,15 +76,15 @@ class ForumController {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const {title, description, author_id, tags_id} = req.params || req.body;
-        if(req.body || req.params) return CustomError.handleBadRequest(res, "Данные не получены")
+        const {title, description, tags_id} = req.body;
+        if(!req.body) return CustomError.handleBadRequest(res, "Данные не получены")
 
         let user;
         let token;
         if (req.headers.authorization) {
             token = req.headers.authorization.split(' ')[1];
             const { id } = jwt.verify(token, secret);
-            user = await User.findOne({where: {id: id}, include: [{model: Role}]});
+            user = await User.findOne({where: {id: id}});
             if(!user) return CustomError.handleNotFound(res, "Пользователь не найден");
         } else {
             return res.status(403).json({message: "Вы не авторизованы"});
@@ -89,18 +92,18 @@ class ForumController {
 
         const forum = await Forum.findOne({where: {title: title}});
         if(forum) return CustomError.handleNotFound(res, "Данный форум уже существует");
-
-        const newForum = await Forum.create({
+        let newForum = await Forum.create({
             title,
             slug: title.replace(/\s+/g, '-').toLowerCase(),  
             description,
-            author_id,
+            author_id: user.id,
             tags_id,
-            likes: 0,
-            dislikes: 0,
+            // likes: 0,
+            // dislikes: 0,
             looked: 0,
         })
         if(!newForum) return res.status(403).json({message: "Что-то пошло не так", newForum});
+        newForum = await Forum.findOne({where: {id: newForum.id}, include: [{model: User, include: [{model: Role}]}, {model: Tags}]})
 
         return res.status(200).json({message: "Форум добавлен", newForum, status: 201});
     }
@@ -177,7 +180,7 @@ class ForumController {
     }
 
     async removeFeatured(req, res) {
-        const {forum_id} = req.params || req.body;
+        const {forum_id} = req.params;
         let user;
         let token;
         if(req.headers.authorization) {
@@ -194,6 +197,70 @@ class ForumController {
 
         return res.status(200).json({message: "Избранный форум удален", featured, status: 201});
     }
-}
 
+
+    // ADD LIKES 
+    async addLikes(req, res) {
+        const {id} = req.params;
+        if(!id) return CustomError.handleBadRequest(res, "Данные переданы некорректно");
+        let user;
+        let token;
+        if(req.headers.authorization) {
+            token = req.headers.authorization.split(' ')[1];
+            const {id} = jwt.verify(token, secret);
+            user = await User.findOne({where: {id}});
+            if(!user) return CustomError.handleNotFound(res, "Пользователь не найден");
+        } else {
+            return res.status(403).json({message: "Вы не авторизованы"});
+        }
+
+        const forum = await Forum.findOne({where: {id}});
+        if(!forum) return CustomError.handleNotFound(res, "Форум не найден");
+
+        const existingDisikes = await Likes.findOne({where: {user_id: user.id, forum_id: forum.id}})
+        if(existingDisikes) {
+            await existingDisikes.destroy();
+            return res.status(200).json({message: "Лайк удален", existingDisikes, status: 201});
+        }
+
+        let newLikes = await Likes.create({
+            user_id: user.id,
+            forum_id: forum.id
+        })
+
+        newLikes = await Likes.findOne({where: {id: newLikes.id}, include: [{model: User, as: 'users'}, {model: Forum, as: 'forum' }]})
+        return res.status(201).json({ message: 'Лайк успешно добавлен', like: newLikes });
+    }
+
+    async addDislikes(req, res) {
+        const {id} = req.params;
+        if(!id) return CustomError.handleBadRequest(res, "Данные переданы некорректно");
+        let user;
+        let token;
+        if(req.headers.authorization) {
+            token = req.headers.authorization.split(' ')[1];
+            const {id} = jwt.verify(token, secret);
+            user = await User.findOne({where: {id}});
+            if(!user) return CustomError.handleNotFound(res, "Пользователь не найден");
+        } else {
+            return res.status(403).json({message: "Вы не авторизованы"});
+        }
+
+        const forum = await Forum.findOne({where: {id}});
+        if(!forum) return CustomError.handleNotFound(res, "Форум не найден");
+
+        const existingLikes = await Dislikes.findOne({where: {user_id: user.id, forum_id: forum.id}})
+        await existingLikes.destroy();
+        if(existingLikes) return res.status(200).json({message: "Дизлайк удален", existingLikes, status: 201});
+
+        const newDisikes = await Dislikes.create({
+            user_id: user.id,
+            forum_id: forum.id
+        })
+        newDisikes = await Likes.findOne({where: {id: newDisikes.id}, include: [{model: User, as: 'users'}, {model: Forum, as: 'forum' }]})
+
+        return res.status(201).json({ message: 'Дизлайк успешно добавлен', dislike: newDisikes });
+    }
+
+}
 module.exports = new ForumController();

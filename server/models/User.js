@@ -111,11 +111,13 @@ module.exports = (sequelize, DataTypes) => {
         User.hasMany(models.Forum, {foreignKey: 'author_id'});
 
 
-        // LIKES AND DISLIKES USER
-        // User.belongsTo(models.Likes, { as: 'likedByUserAssociation', foreignKey: 'liked_by_user' }); 
+        // LIKES AND DISLIKES FORUM
+        User.hasMany(models.LikesForum, { foreignKey: "user_id" });
+        User.hasMany(models.DislikesForum, {foreignKey: "user_id" });
 
-        // User.hasMany(models.Dislikes, { as: 'user_id', foreignKey: 'dislikes_id' }); 
-        // User.hasMany(models.Dislikes, { as: 'dislikes_user_id', foreignKey: 'dislike_id' }); 
+        // LIKES AND DISLIKES TOPICS
+        User.hasMany(models.LikesTopics, { foreignKey: "user_id" });
+        User.hasMany(models.DislikesTopics, { foreignKey: "user_id" });
     }
 
     return User;
