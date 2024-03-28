@@ -1,6 +1,7 @@
 const CustomError = require('../Errors/errors');
 const db = require('../models/index');
 const Role = db.Role;
+const { validationResult } = require("express-validator");
 
 
 class RoleController {
@@ -42,6 +43,12 @@ class RoleController {
             if (!name) {
                 return CustomError.handleNotFound(res, "Данных нет", 400); // Изменено на статус 400
             }
+
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
     
             const existingRole = await Role.findOne({ where: { name } });
             if (existingRole) {
@@ -69,6 +76,12 @@ class RoleController {
             const role = await Role.findByPk(id);
             if (!role) {
                 return CustomError.handleNotFound(res, "Роль не найдена", 404);
+            }
+
+            const errors = validationResult(req);
+
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
             }
 
             role.name = req.body.name || role.name;

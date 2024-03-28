@@ -33,7 +33,6 @@ const createImageUploadMiddleware = (type, required = false) => {
         fileSize: 1048576 * 100 // 100 Мб
     };
 
-    // Возвращаем middleware multer с заданными параметрами
     return (req, res, next) => {
         const upload = multer({
             storage: storage,

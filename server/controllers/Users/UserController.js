@@ -31,57 +31,7 @@ class UserController {
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);
         }
     }
-
-    // async getAll(req, res) {
-    //     try {
-    //         // Получаем всех пользователей с их ролями
-    //         const users = await User.findAll({
-    //             include: [{ model: Role }]
-    //         });
-
-    //         // Для каждого пользователя получаем количество активных и неактивных лайков
-    //         for (const user of users) {
-    //             const [activeLikesCount, inactiveLikesCount] = await Promise.all([
-    //                 Likes.count({ 
-    //                     where: { 
-    //                         liked_user_id: user.id, // ID пользователя, которому ставят лайки
-    //                         status: true // Только активные лайки
-    //                     }
-    //                 }),
-    //                 Likes.count({ 
-    //                     where: { 
-    //                         liked_user_id: user.id, // ID пользователя, которому ставят лайки
-    //                         status: false // Только неактивные лайки
-    //                     }
-    //                 })
-    //             ]);
-                
-    //             user.dataValues.active_likes_count = activeLikesCount; // Количество активных лайков
-    //             user.dataValues.inactive_likes_count = inactiveLikesCount; // Количество неактивных лайков
-
-    //             // Проверяем, если количество активных лайков больше 0 и количество неактивных лайков тоже больше 0,
-    //             // то меняем статус последнего неактивного лайка на активный
-    //             if (activeLikesCount > 0 && inactiveLikesCount > 0) {
-    //                 const lastInactiveLike = await Likes.findOne({
-    //                     where: {
-    //                         liked_user_id: user.id,
-    //                         status: false // Находим последний неактивный лайк
-    //                     },
-    //                     order: [['createdAt', 'DESC']] // Сортируем по дате создания в обратном порядке
-    //                 });
-    //                 lastInactiveLike.status = true; // Меняем статус на активный
-    //                 await lastInactiveLike.save(); // Сохраняем изменения
-    //             }
-    //         }
-
-    //         return res.status(200).json({ status: 200, message: "Пользователи получены", users: users });
-    //     } catch (error) {
-    //         console.error(`Ошибка извлечения ролей: ${error.message}`);
-    //         return res.status(500).json({ status: 500, message: "Ошибка на сервере" });
-    //     }
-    // }
     
-
     async getId(req, res) {
         try{
             const {id} = req.params || req.body || req.query;
@@ -100,11 +50,15 @@ class UserController {
 
     async update(req, res) {
         try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             if(!req.body) {
                 return CustomError.handleNotFound(res, "Данных нет", 400);
             }
-
             if(!req.headers.authorization) return res.status(403).json({message: "Некорректно передан токен либо не передан"})
+
             const authToken = req.headers.authorization.split(' ')[1];
             let { id } = jwt.verify(authToken, secret);
             const userVerify = await User.findOne({where: {id: id}})
@@ -140,6 +94,9 @@ class UserController {
     // Все поля пользователя может редактировать лишь админ
     async updateAdmin(req, res) {
         try {
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
             let id;
             if (req.params && req.params.id) {
                 id = req.params.id;

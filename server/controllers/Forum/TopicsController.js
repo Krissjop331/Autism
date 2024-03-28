@@ -3,8 +3,6 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require('../../config/config.json');
 const secret = config.secretKey || 'JWTKEY';
-const cookie = require("cookie-parser");
-const moment = require('moment');
 
 const CustomError = require('../../Errors/errors');
 const db = require("../../models/index");
@@ -78,7 +76,13 @@ class TopicsController {
     }
 
     async create(req, res) {
-        const {id, title, description} = req.body || req.params;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const {id} = req.params
+        const {title, description} = req.body ;
         if(req.params || req.body) return CustomError.handleBadRequest(res, "Данные не переданы");
         let user;
         let token;
@@ -112,6 +116,11 @@ class TopicsController {
     }
 
     async update(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id, topics_id, title, description, date, looked, status} = req.params || req.body;
         let user;
         let token;
@@ -180,6 +189,11 @@ class TopicsController {
     }
 
     async createComment(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id} = req.params;
         if(!req.params) return CustomError.handleBadRequest(res, "Данные некорректны");
         console.log(req.params.id);
@@ -197,7 +211,7 @@ class TopicsController {
 
         let commentTopics = await CommentTopics.create({
             content: req.body.content,
-            file_patch: req.body.file_patch || '',
+            file_patch: req.body.file || req.file || '',
             likes: 0,
             dislikes: 0,
             author_id: user.id

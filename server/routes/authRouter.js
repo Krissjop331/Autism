@@ -2,14 +2,43 @@
     const router = express.Router();
     const multer = require('multer');
     const uploads = multer();
+    const { body, validationResult } = require('express-validator');
 
     const AuthController = require("../controllers/AuthController.js");
     const checkRolesMiddleware = require("../middleware/checkRolesMiddleware.js");
     const authMiddleware = require("../middleware/authMiddleware.js");
 
 
-    router.post('/signin', uploads.none(), AuthController.signIn);
-    router.post('/signup', uploads.none(), authMiddleware, checkRolesMiddleware(["admin", 'doctor', 'parents']), AuthController.signUp);
+    router.post('/signin', [
+        body('email')
+            .isEmail().withMessage('Введите корректный адрес электронной почты')
+            .isLength({min: 3}).withMessage('Заголовок не может быть меньше 3 символов')
+            .notEmpty().withMessage('Это поле обязательно'),
+        body('password')
+            .notEmpty().withMessage('Это поле обязательно')
+            .isLength({ min: 6 }).withMessage('Введите пароль не меньше 6 символов')
+    ], uploads.none(), AuthController.signIn);
+    router.post('/signup', [
+        body('first_name')
+            .isLength({min: 3}).withMessage('Поле не может быть меньше 3 символов')
+            .notEmpty().withMessage('Это поле обязательно'),
+        body('last_name')
+            .isLength({min: 3}).withMessage('Поле не может быть меньше 3 символов')
+            .notEmpty().withMessage('Это поле обязательно'),
+        body('email')
+            .isEmail().withMessage('Введите корректный адрес электронной почты')
+            .isLength({min: 3}).withMessage('Поле не может быть меньше 3 символов')
+            .notEmpty().withMessage('Это поле обязательно'),
+        body('birthday')
+            .notEmpty().withMessage('Дата рождения не должна быть пустой')
+            .isDate().withMessage('Введите допустимую дату рождения')
+            .toDate(),
+        body("phone_number")
+            .isLength({min: 10}).withMessage("Номер не может содержать меньше 10 символов"),
+        body('password')
+            .notEmpty().withMessage('Это поле обязательно')
+            .isLength({ min: 6 }).withMessage('Введите пароль не меньше 6 символов')
+    ], uploads.none(), authMiddleware, checkRolesMiddleware(["admin", 'doctor', 'parents']), AuthController.signUp);
     router.get('/signout', uploads.none(), AuthController.signOut);
 
     // Подтверждение регистрации пользователя, казывается в параметрах состояние true или false (update user)

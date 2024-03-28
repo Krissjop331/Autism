@@ -1,10 +1,4 @@
-const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
-const config = require('../../config/config.json');
-const secret = config.secretKey || 'JWTKEY';
-const cookie = require("cookie-parser");
-const moment = require('moment');
 
 const CustomError = require('../../Errors/errors');
 const db = require("../../models/index");
@@ -41,7 +35,12 @@ class ResourcesController {
     }
 
     async create(req, res) {
-        const {title, description, url, file, type_id, module_id} = req.params || req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const {title, description, url, type_id, module_id} = req.params || req.body;
         if(!req.body || !req.params) return CustomError.handleBadRequest(res, "Данные не переданы");
         
         const resourcesDublicate = await Resources.findOne({where: {title: title}});
@@ -51,8 +50,8 @@ class ResourcesController {
             title,
             slug: title.replace(/\s+/g, '-').toLowerCase(),
             description,
-            url: url || null,
-            file_patch: file || null,
+            url: url || '',
+            file_patch: req.file || req.body.file || '',
             type_id,
             module_id
         })  
@@ -69,6 +68,11 @@ class ResourcesController {
     }
 
     async update(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id} = req.params || req.body;
         if(!id) return CustomError.handleBadRequest(res, "Неверно отправлен запрос");
 
@@ -85,7 +89,7 @@ class ResourcesController {
         resources.slug = req.body.title.replace(/\s+/g, '-').toLowerCase() || resources.slug;
         resources.description = req.body.description || resources.description;
         resources.url = req.body.url || resources.url;
-        resources.file_patch = req.body.file || req.params.file || resources.file_patch;
+        resources.file_patch = req.body.file || req.params.file || req.file || resources.file_patch;
         resources.type_id = req.body.type_id || req.params.type_id || resources.type_id;
         resources.module_id = req.body.module_id || req.params.module_id || resources.module_id;
         await resources.save();
@@ -127,6 +131,11 @@ class ResourcesController {
     }
 
     async createModule(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {module} = req.params || req.body;  
         if(!module || !req.body || !req.params) return CustomError.handleBadRequest(res);
         const resourceDublicate = await ResourcesModule.findOne({where: {module: module.toLowerCase()}});
@@ -134,7 +143,7 @@ class ResourcesController {
 
 
         const resourcesModule = await ResourcesModule.create({
-            module: module.toLowerCase()
+            module
         });
         if(!resourcesModule) return res.status(403).json({message: "Модуль не удалось добавить", status: 403});
         
@@ -143,6 +152,11 @@ class ResourcesController {
     }
 
     async updateModule(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id, module} = req.params || req.body;
         if(!id || !req.body || !req.params) return CustomError.handleBadRequest(res);
 
@@ -194,22 +208,27 @@ class ResourcesController {
     }
 
     async createType(req, res) {
-        const {type} = req.params || req.body;  
-        if(!type || !req.body || !req.params) return CustomError.handleBadRequest(res);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        if(!req.body) return CustomError.handleBadRequest(res);
         const resourceDublicate = await ResourcesType.findOne({where: {type: type.toLowerCase()}});
         if(resourceDublicate) return CustomError.handleDuplicateResource(res, "Такой тип уже существует");
-
-
         const resourcesType = await ResourcesType.create({
-            type: type.toLowerCase()
+            type: req.body.type
         });
         if(!resourcesType) return res.status(403).json({message: "Тип не удалось добавить", status: 403});
         
-
         return res.status(200).json({message: "Тип добавлен", type: resourcesType, status: 201});
     }
 
     async updateType(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id, type} = req.params || req.body;
         if(!id || !req.body || !req.params) return CustomError.handleBadRequest(res);
 

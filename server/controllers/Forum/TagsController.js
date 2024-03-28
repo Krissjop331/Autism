@@ -57,6 +57,11 @@ class TagsController {
     }
 
     async create(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {title} = req.params || req.body;
         if(!title) return CustomError.handleBadRequest(res, "Не переданы данные");
 
@@ -68,6 +73,11 @@ class TagsController {
     }
 
     async update(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id, title} = req. params || req.body;
         if(!id) return CustomError.handleBadRequest(res, "Не передан тег");
 

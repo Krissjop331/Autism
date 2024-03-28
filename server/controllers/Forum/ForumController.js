@@ -1,10 +1,7 @@
-const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const config = require('../../config/config.json');
 const secret = config.secretKey || 'JWTKEY';
-const cookie = require("cookie-parser");
-const moment = require('moment');
 
 const CustomError = require('../../Errors/errors');
 const db = require("../../models/index");
@@ -71,6 +68,11 @@ class ForumController {
     }
 
     async create(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {title, description, author_id, tags_id} = req.params || req.body;
         if(req.body || req.params) return CustomError.handleBadRequest(res, "Данные не получены")
 
@@ -95,7 +97,7 @@ class ForumController {
             author_id,
             tags_id,
             likes: 0,
-            dislikes,
+            dislikes: 0,
             looked: 0,
         })
         if(!newForum) return res.status(403).json({message: "Что-то пошло не так", newForum});
@@ -104,6 +106,11 @@ class ForumController {
     }
 
     async update(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
         const {id, title, description, looked, tags_id} = req.params || req.body;
         if(!req.params || !req.body) return CustomError.handleBadRequest(res, "Некорректно переданы данные");
 
