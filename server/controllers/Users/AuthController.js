@@ -204,7 +204,7 @@ class AuthController {
                 return res.status(404).json({ message: `Пользователя не существует`, status: 404 });
             }
 
-            const validPassword = bcrypt.compare(req.body.password, user.password);
+            const validPassword = await bcrypt.compare(req.body.password, user.password);
             if (!validPassword) {
                 delete req.body.email;
                 delete req.body.password;

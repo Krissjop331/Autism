@@ -12,8 +12,10 @@
     router.post('/signin', [
         body('email')
             .isEmail().withMessage('Введите корректный адрес электронной почты')
-            .isLength({min: 3}).withMessage('Заголовок не может быть меньше 3 символов')
-            .notEmpty().withMessage('Это поле обязательно'),
+            .isLength({min: 3}).withMessage('Заголовок не может быть меньше 3 символов'),
+        body('login')
+            .optional()
+            .isLength({ min: 3 }).withMessage('Введите пароль не меньше 3 символов'),
         body('password')
             .notEmpty().withMessage('Это поле обязательно')
             .isLength({ min: 6 }).withMessage('Введите пароль не меньше 6 символов')
