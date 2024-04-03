@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom"
-import { ADMIN_ROUTE, FORUM_ROUTE, HOME_ROUTE, LEARN_ROUTE, LOGIN_ROUTE, RESOURCES_ROUTE } from "../consts"
+import { ADMIN_ROUTE, FORUM_ITEM, FORUM_ROUTE, HOME_ROUTE, LEARN_ROUTE, LOGIN_ROUTE, RESOURCES_ROUTE } from "../consts"
 import { ForumPage } from "../pages/forumPage/ForumPage"
 import { LearnPage } from "../pages/learnPage/LearnPage"
 import { LoginPage } from "../pages/loginPage/LoginPage"
@@ -9,6 +9,7 @@ import { Footer } from "./footer/Footer"
 import { AdminPage } from "../pages/adminPage/AdminPage"
 import { useSelector } from "react-redux"
 import { ResourcesPage } from "../pages/resourcesPage/ResourcesPage"
+import { ForumItem } from "../pages/forumPage//forumItem/ForumItem"
 
 
 
@@ -22,15 +23,23 @@ export const AppRouter = () => {
 
     const location = useLocation();
 
-    const headerRoutes = [ LOGIN_ROUTE, LEARN_ROUTE, ADMIN_ROUTE, RESOURCES_ROUTE ]
+    const headerRoutes = [ LOGIN_ROUTE, LEARN_ROUTE, ADMIN_ROUTE, RESOURCES_ROUTE, `${FORUM_ITEM}/:id`]
 
     // Проверяем, нужно ли показывать заголовок и нижний колонтитул
     const shouldShowHeader = () => {
-        return !headerRoutes.includes(location.pathname) && !location.pathname.startsWith('/admin');
+        // Проверяем, нужно ли показывать заголовок
+        console.log(location.pathname)
+        if(location.pathname !== 'item/:id' && location.pathname !== '/') {
+            return false
+        } 
+        return (
+            !headerRoutes.includes(location.pathname)   // Если текущий путь не содержится в массиве headerRoutes
+            // !location.pathname.startsWith('/admin') // И текущий путь не начинается с '/admin'
+        );
     };
 
     const shouldShowFooter = () => {
-        return location.pathname !== LOGIN_ROUTE ; // Если текущий маршрут не совпадает с LOGIN_ROUTE, то показываем заголовок и нижний колонтитул
+        return location.pathname !== LOGIN_ROUTE ;   // Если текущий маршрут не совпадает с LOGIN_ROUTE, то показываем заголовок и нижний колонтитул
     };
 
     return (
@@ -42,7 +51,8 @@ export const AppRouter = () => {
                     <Route path={HOME_ROUTE} element={ <MainPage /> } exact/>
                     <Route path={LOGIN_ROUTE} element={ <LoginPage /> } exact/>
                     <Route path={LEARN_ROUTE} element={ <LearnPage /> } exact/>
-                    <Route path={FORUM_ROUTE} element={ <ForumPage /> } exact/>
+                    <Route path={`${FORUM_ROUTE}`} element={ <ForumPage /> } exact/>
+                    <Route path={FORUM_ITEM + '/:id'} element={<ForumItem />} exact />
                     <Route path={RESOURCES_ROUTE} element={ <ResourcesPage/> } exact></Route>
                     <Route path='/admin/*' element={ <AdminPage /> } />
                     {/* <Route path={ADMIN_ROUTE} element={ <AdminPage /> } /> */}

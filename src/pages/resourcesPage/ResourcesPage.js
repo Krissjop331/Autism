@@ -41,7 +41,7 @@ export const ResourcesPage = () => {
       <div className="wrapper">
         <Navbar className='learnNavbar'/>
         <h1>Ресурсы</h1>
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempora illo consectetur optio ullam sequi quod, reiciendis delectus quam id? Nam cupiditate enim consectetur dolor in ipsam ipsa, neque fugit atque quam sunt odit impedit veritatis ad deserunt accusamus nemo aut cum libero ullam officiis eveniet tempore exercitationem! Vitae voluptate modi rem mollitia fugiat quis, aspernatur illo facere molestias dignissimos, corporis dolorem nostrum provident. Natus officia aut maiores vel expedita repudiandae. Veniam cupiditate possimus iste unde eligendi nemo illo, quaerat culpa perspiciatis inventore sunt dicta excepturi facilis corporis odit necessitatibus beatae nisi! Modi dolores esse reiciendis qui vero suscipit aperiam nesciunt!</p>
+        <p class="zag-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Tempora illo consectetur optio ullam sequi quod, reiciendis delectus quam id? Nam cupiditate enim consectetur dolor in ipsam ipsa, neque fugit atque quam sunt odit impedit veritatis ad deserunt accusamus nemo aut cum libero ullam officiis eveniet tempore exercitationem! Vitae voluptate modi rem mollitia fugiat quis, aspernatur illo facere molestias dignissimos, corporis dolorem nostrum provident. Natus officia aut maiores vel expedita repudiandae. Veniam cupiditate possimus iste unde eligendi nemo illo, quaerat culpa perspiciatis inventore sunt dicta excepturi facilis corporis odit necessitatibus beatae nisi! Modi dolores esse reiciendis qui vero suscipit aperiam nesciunt!</p>
 
         {/* Аккордеон */}
         <div className={`accordion-item ${isOpen ? 'open' : ''}`}>

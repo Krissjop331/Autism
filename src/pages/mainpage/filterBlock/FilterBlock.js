@@ -33,7 +33,7 @@ export const FilterBlock = () => {
         <div className="wrapper">
             <h4>Filter Tags</h4>
             <div className='filterCards'>
-                {filterData.map(item => <FilterItem item={item}/> )}
+                {filterData.map(item => <FilterItem key={item.title} item={item}/> )}
             </div>
         </div>
     </div>

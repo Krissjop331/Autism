@@ -1,10 +1,13 @@
 import React from 'react'
 import './ForumItem.css'
+import { useNavigate } from 'react-router-dom'
 
 export const ForumItem = (props) => {
     const item = props.item
+    const navigate = useNavigate();
     return (
-        <div className='forumItem'>
+        <div className='forumItem'  onClick={() => {navigate('/item/' + item.id);
+        console.log("OnCLIKC")}}>
             <div className="mainInfo">
                 <div className="lastuser">
                     <img src="./img/avatar.png" alt="avatar" />
