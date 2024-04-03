@@ -12,6 +12,8 @@ const CommentTopics = db.CommentTopics;
 const CommentTMany = db.CommentTMany;
 const Role = db.Role;
 const Forum = db.Forum;
+const Likes = db.LikesTopics;
+const Dislikes = db.DislikesTopics;
 
 
 class TopicsController {
@@ -240,6 +242,71 @@ class TopicsController {
         await commentTopics.destroy();
 
         return res.status(200).json({message: "Комментарий удален", status: 201});
+    }
+
+    // ADD LIKES 
+    async addLikes(req, res) {
+        const {id} = req.params;
+        if(!id) return CustomError.handleBadRequest(res, "Данные переданы некорректно");
+        let user;
+        let token;
+        if(req.headers.authorization) {
+            token = req.headers.authorization.split(' ')[1];
+            const {id} = jwt.verify(token, secret);
+            user = await User.findOne({where: {id}});
+            if(!user) return CustomError.handleNotFound(res, "Пользователь не найден");
+        } else {
+            return res.status(403).json({message: "Вы не авторизованы"});
+        }
+
+        const topics = await Topics.findOne({where: {id}});
+        if(!topics) return CustomError.handleNotFound(res, "Тема не найдена");
+
+        const existingLikes = await Likes.findOne({where: {user_id: user.id, topics_id: topics.id}})
+        if(existingLikes) {
+            await existingLikes.destroy();
+            return res.status(200).json({message: "Лайк удален", existingLikes, status: 201});
+        }
+
+        let newLikes = await Likes.create({
+            user_id: user.id,
+            topics_id: topics.id
+        })
+
+        newLikes = await Likes.findOne({where: {id: newLikes.id}, include: [{model: User, as: 'users'}, {model: Topics, as: 'topics' }]})
+        return res.status(201).json({ message: 'Лайк успешно добавлен', like: newLikes });
+    }
+
+    async addDislikes(req, res) {
+        const {id} = req.params;
+        if(!id) return CustomError.handleBadRequest(res, "Данные переданы некорректно");
+        let user;
+        let token;
+        if(req.headers.authorization) {
+            token = req.headers.authorization.split(' ')[1];
+            const {id} = jwt.verify(token, secret);
+            user = await User.findOne({where: {id}});
+            if(!user) return CustomError.handleNotFound(res, "Пользователь не найден");
+        } else {
+            return res.status(403).json({message: "Вы не авторизованы"});
+        }
+
+        const topics = await Topics.findOne({where: {id}});
+        if(!topics) return CustomError.handleNotFound(res, "Тема не найдена");
+
+        const existingsDislikes = await Likes.findOne({where: {user_id: user.id, topics_id: topics.id}})
+        if(existingsDislikes) {
+            await existingsDislikes.destroy();
+            return res.status(200).json({message: "Лайк удален", existingsDislikes, status: 201});
+        }
+
+        const newDisikes = await Dislikes.create({
+            user_id: user.id,
+            topics_id: topics.id
+        })
+        newDisikes = await Likes.findOne({where: {id: newDisikes.id}, include: [{model: User, as: 'users'}, {model: Topics, as: 'topics' }]})
+
+        return res.status(201).json({ message: 'Дизлайк успешно добавлен', dislike: newDisikes });
     }
 }
 
