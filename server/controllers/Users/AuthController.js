@@ -57,7 +57,7 @@ class AuthController {
     async signUp(req, res) {
         try {
             const authToken = req.headers.authorization.split(" ")[1] || '';
-            if (!req.body) {
+            if (!req.body || !req.params) {
                 return CustomError.handleNotFound(res, "Вы не авторизованы", 400);
             }
             const errors = validationResult(req);

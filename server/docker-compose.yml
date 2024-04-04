@@ -12,7 +12,7 @@ services:
       DATABASE_PASSWORD: root
       DATABASE_NAME: authism_birge
     volumes:
-      - ./stories:/stories
+      - ../stories:/stories
     networks:
       - my_custom_network
 

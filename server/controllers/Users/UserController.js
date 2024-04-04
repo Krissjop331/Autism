@@ -94,9 +94,7 @@ class UserController {
     // Все поля пользователя может редактировать лишь админ
     async updateAdmin(req, res) {
         try {
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
+            
             let id;
             if (req.params && req.params.id) {
                 id = req.params.id;
@@ -121,6 +119,7 @@ class UserController {
             user.last_name = req.body.last_name || user.last_name;
             user.email = req.body.email || user.email;
             user.login = req.body.login || user.login;
+            user.birthday = req.body.birthday || user.birthday
             // user.avatar_url = req.file?.path || ''; // Добавил проверку на наличие файла в body
             user.phone_number = req.body.phone || user.phone_number;
             user.status = req.body.status || user.status;
@@ -136,7 +135,7 @@ class UserController {
                 await user.save();
             }
         
-            return res.status(200).json({message: "Данные обновлены", user, id: userVerify.i, user_Id: user.id, status: 201})
+            return res.status(200).json({message: "Данные обновлены", user, user_Id: user.id, status: 201})
         } catch (e) {
             console.error(`Ошибка изменения пользователя адином: ${e.message}`);
             CustomError.handleInternalServerError(res, "Ошибка на сервере", 500);

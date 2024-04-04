@@ -6,7 +6,7 @@ const fileResourcesMiddleware = (type, required = false) => {
     // Где будут загружаться и храниться
     const storage = multer.diskStorage({
         destination(req, file, cb) {
-            const uploadPath = `stories/files/resources/${type}/`; 
+            const uploadPath = `../stories/files/resources/${type}/`; 
             cb(null, uploadPath); 
         },
         filename(req, file, cb) {

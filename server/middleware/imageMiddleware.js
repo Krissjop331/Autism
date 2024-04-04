@@ -6,7 +6,7 @@ const createImageUploadMiddleware = (type, required = false) => {
     // Где будут загружаться и храниться
     const storage = multer.diskStorage({
         destination(req, file, cb) {
-            const uploadPath = `stories/images/${type}/`; // Формируем путь для сохранения
+            const uploadPath = `../stories/images/${type}/`; // Формируем путь для сохранения
             cb(null, uploadPath); // Передаем путь в middleware multer
         },
         filename(req, file, cb) {
