@@ -50,10 +50,7 @@ class UserController {
 
     async update(req, res) {
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
+
             if(!req.body) {
                 return CustomError.handleNotFound(res, "Данных нет", 400);
             }
@@ -73,6 +70,7 @@ class UserController {
 
             user.login = req.body.login || req.params.login || user.login;
             user.email = req.body.email || req.params.email || user.email;
+            user.birthday = req.body.birthday || user.birthday
             user.phone_number = req.body.phone || req.params.phone || req.params.phone_number || req.body.phone_number || user.phone_number;
             await user.save();
 
@@ -94,7 +92,7 @@ class UserController {
     // Все поля пользователя может редактировать лишь админ
     async updateAdmin(req, res) {
         try {
-            
+
             let id;
             if (req.params && req.params.id) {
                 id = req.params.id;
